@@ -1,4 +1,5 @@
 // 部分完成 (要dao実装)
+// TODO: 検索押下後の未入力エラー表示実装
 
 package scoremanager.main;
 
@@ -39,27 +40,30 @@ public class TestRegistAction extends Action {
 
         // 教員に紐づくクラス、科目を取得
         List<String> classNumList = new ClassNumDao().filter(teacher.getSchool());
-        // List<Subject> subjectList = new SubjectDao().filter(teacher.getSchool());
+        // List<Subject> subjectList = new SubjectDao().filter(teacher.getSchool()); // 未実装
         List<Object> subjectList = new ArrayList<>(); // 仮
 
-        // 全条件が指定されている場合の検索処理
-        if (entYearStr != null && !entYearStr.equals("0") &&
-                classNum != null && !classNum.equals("0") &&
-                subjectCd != null && !subjectCd.equals("0") &&
-                numStr != null && !numStr.equals("0")) { // 全条件が指定されていて0ではない, TODO: 0チェックの妥当性評価 (empatyであるべきではないか)
+        // 全条件が指定されている場合 → 検索
 
+        // 検索処理
+        if (entYearStr != null && !entYearStr.isEmpty() &&
+                classNum != null && !classNum.isEmpty() &&
+                subjectCd != null && !subjectCd.isEmpty() &&
+                numStr != null && !numStr.isEmpty()) { // f1~f4の全条件が指定されている
+
+            // 値変換
             int entYear = Integer.parseInt(entYearStr);
             int num = Integer.parseInt(numStr);
 
             // 選択された科目を取得
             // Subject subject = student_dao.get(subjectCd, teacher.getSchool());
 
-            // 条件に一致する成績(テスト、レスポンス内容)を取得
+            // 条件に一致する成績(テスト (レスポンス内容))を取得
             // List<Test> tests = new TestDao().filter(entYear, classNum, subject, num, teacher.getSchool());
 
             // 検索結果をセット
             // request.setAttribute("tests", tests);
-            request.setAttribute("tests", new int[] {}); // 仮
+            request.setAttribute("tests", new ArrayList<>()); // 仮
         }
 
         // 表示用のデータをセット

@@ -39,6 +39,7 @@ pageEncoding="UTF-8" %>
                             <select class="form-select" id="test-f3-select" name="f3">
                                 <option value="0">--------</option>
                                 <c:forEach var="subject" items="${subject_set}">
+                                    <%-- 現在のnumと選択されていたf3が一致していた場合selectedを追記 --%>
                                     <option value="<c:out value='${subject}' />" <c:if test="${subject == f3}">selected</c:if>><c:out value="${subject}" /></option>
                                 </c:forEach>
                             </select>
@@ -48,6 +49,7 @@ pageEncoding="UTF-8" %>
                             <select class="form-select" id="test-f4-select" name="f4">
                                 <option value="0">--------</option>
                                 <c:forEach var="num" items="${num_set}">
+                                    <%-- 現在のnumと選択されていたf4が一致していた場合selectedを追記 --%>
                                     <option value="${num}" <c:if test="${num == f4}">selected</c:if>>${num}</option>
                                 </c:forEach>
                             </select>
@@ -58,32 +60,49 @@ pageEncoding="UTF-8" %>
                     </div>
                 </form>
 
-                <%-- ※入力値エラー 確認 --%>
+                <%-- ※入力値エラー TODO: 確認 --%>
                 <div class="mt-2 text-warning"><c:out value="${errors.get('f1')}" /></div>
 
                 <c:choose>
                     <c:when test="${tests.size() > 0}">
-                        <%-- 科目表示 (仮) --%>
-                        <div>科目：<c:out value="${f3}" />（<c:out value="${f4}" />回）</div>
-                        <table class="table table-hover">
-                            <tr>
-                                <th>入学年度</th>
-                                <th>クラス</th>
-                                <th>学生番号</th>
-                                <th>氏名</th>
-                                <th>点数</th>
-                            </tr>
-                            <c:forEach var="test" items="${tests}">
+                        <form method="post" action="TestRegistExecute.action">
+                            <%-- 隠しフィールド 編集先特定用 --%>
+                            <input type="hidden" name="count" value="<c:out value='${f4}' />">
+                            <input type="hidden" name="subject" value="<c:out value='${f3}' />">
+                            <div>科目：<c:out value="${f3}" />（<c:out value="${f4}" />回）</div>
+                            <table class="table table-hover">
                                 <tr>
-                                    <td>${test.getStudent().getEntYear()}</td>
-                                    <td>${test.getClassNum()}</td>
-                                    <td>${test.getNo()}</td>
-                                    <td>${test.getStudent().getName()}</td>
-                                    <%-- TODO: 入力欄化 --%>
-                                    <td>${test.getScore()}</td>
+                                    <th>入学年度</th>
+                                    <th>クラス</th>
+                                    <th>学生番号</th>
+                                    <th>氏名</th>
+                                    <th>点数</th>
                                 </tr>
-                            </c:forEach>
-                        </table>
+                                <c:forEach var="test" items="${tests}">
+                                    <tr>
+                                        <td>${test.getStudent().getEntYear()}</td>
+                                        <td><c:out value="${test.getClassNum()}" /></td>
+                                        <td><c:out value="${test.getStudent().getNo()}" /></td>
+                                        <td><c:out value="${test.getStudent().getName()}" /></td>
+                                        <%-- 点数入力部 --%>
+                                        <td>
+                                            <input type="number" name="point_<c:out value="${test.getStudent().getNo()}" />" value="${test.getPoint()}" min="0" max="100">
+                                        </td>
+                                        <%-- 入力値に対するエラーメッセージ --%>
+                                        <c:if test="${not empty errorMap.get(test.getStudent().getNo())}">
+                                            <div class="mt-2 text-warning">
+                                                <c:out value="${errorMap.get(test.getStudent().getNo())}" />
+                                            </div>
+                                        </c:if>
+                                        <%-- 隠しフィールド 対象生徒列挙用 --%>
+                                        <input type="hidden" name="regist" value="<c:out value='${test.getStudent().getNo()}' />">
+                                    </tr>
+                                </c:forEach>
+                            </table>
+                            <div class="mx-auto py-2">
+                                <button class="btn btn-secondary" id="regist-button" name="end">登録して終了</button>
+                            </div>
+                        </form>
                     </c:when>
                 </c:choose>
             </section>
