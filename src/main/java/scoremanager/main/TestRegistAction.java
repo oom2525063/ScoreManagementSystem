@@ -46,7 +46,7 @@ public class TestRegistAction extends Action {
         if (entYearStr != null && !entYearStr.equals("0") &&
                 classNum != null && !classNum.equals("0") &&
                 subjectCd != null && !subjectCd.equals("0") &&
-                numStr != null && !numStr.equals("0")) { // 全条件が指定されていて0ではない
+                numStr != null && !numStr.equals("0")) { // 全条件が指定されていて0ではない, TODO: 0チェックの妥当性評価 (empatyであるべきではないか)
 
             int entYear = Integer.parseInt(entYearStr);
             int num = Integer.parseInt(numStr);
@@ -54,7 +54,7 @@ public class TestRegistAction extends Action {
             // 選択された科目を取得
             // Subject subject = student_dao.get(subjectCd, teacher.getSchool());
 
-            // 条件に一致する成績(テストの結果)を取得
+            // 条件に一致する成績(テスト、レスポンス内容)を取得
             // List<Test> tests = new TestDao().filter(entYear, classNum, subject, num, teacher.getSchool());
 
             // 検索結果をセット
