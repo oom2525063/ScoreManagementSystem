@@ -1,6 +1,6 @@
-<%-- 成績参照検索JSP --%>
-<%-- test_list.jsp(this): 検索用初期画面 --%>
-<%-- test_list_student.jsp: 科目側表示(要追記) + 学生側表示(要追記) ? --%>
+<%-- 成績一覧(科目、学生)JSP --%>
+<%-- test_list.jsp: 検索用初期画面 --%>
+<%-- test_list_student.jsp(this): 科目側表示(要追記) + 学生側表示(要追記) ? --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <c:import url="/common/base.jsp" >
@@ -12,7 +12,8 @@
 
         <c:param name="content">
             <section class="me-4">
-                <h2 class="h3 mb-3 fw-norma bg-secondary bg-opacity-10 py-2 px-4">成績参照</h2>
+                <%-- TODO: 種別ごとに書き換え --%>
+                <h2 class="h3 mb-3 fw-norma bg-secondary bg-opacity-10 py-2 px-4">成績一覧（[種別名]）</h2>
                 <%-- 検索ボックス --%>
                 <div class="border mx-3 mb-3 py-3 px-5 rounded">
                     <%-- 科目情報 --%>
@@ -78,6 +79,10 @@
                 <c:if test="${empty f}">
                     <p class="text-info">科目情報を選択または学生情報を入力して検索ボタンをクリックしてください</p>
                 </c:if>
+
+                <%-- TODO: ここに検索結果表示用のテーブルを定義 (fの値で分岐) --%>
+                <%-- ※結果が存在しなかった場合のエラー表示もここで作成 (student_list.jsp参照) --%>
+
             </section>
         </c:param>
     </c:import>
