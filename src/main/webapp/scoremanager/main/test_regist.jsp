@@ -38,9 +38,9 @@ pageEncoding="UTF-8" %>
                             <label class="form-label" for="test-f3-select">科目</label>
                             <select class="form-select" id="test-f3-select" name="f3">
                                 <option value="0">--------</option>
-                                <c:forEach var="subject" items="${subject_set}">
+                                <c:forEach var="subject" items="${subjects}">
                                     <%-- 現在のnumと選択されていたf3が一致していた場合selectedを追記 --%>
-                                    <option value="<c:out value='${subject}' />" <c:if test="${subject == f3}">selected</c:if>><c:out value="${subject}" /></option>
+                                    <option value="<c:out value='${subject.getCd()}' />" <c:if test="${subject.getCd() == f3}">selected</c:if>><c:out value="${subject.getName()}" /></option>
                                 </c:forEach>
                             </select>
                         </div>
@@ -59,17 +59,15 @@ pageEncoding="UTF-8" %>
                         </div>
                     </div>
                 </form>
-
-                <%-- ※入力値エラー TODO: 確認 --%>
-                <div class="mt-2 text-warning"><c:out value="${errors.get('f1')}" /></div>
-
                 <c:choose>
                     <c:when test="${tests.size() > 0}">
                         <form method="post" action="TestRegistExecute.action">
-                            <%-- 隠しフィールド 編集先特定用 --%>
-                            <input type="hidden" name="count" value="<c:out value='${f4}' />">
-                            <input type="hidden" name="subject" value="<c:out value='${f3}' />">
-                            <div>科目：<c:out value="${f3}" />（<c:out value="${f4}" />回）</div>
+                            <%-- 隠しフィールド パラメーター保持用 --%>
+                            <input type="hidden" name="f1" value="<c:out value="${f1}" />">
+                            <input type="hidden" name="f2" value="<c:out value="${f2}" />">
+                            <input type="hidden" name="f3" value="<c:out value="${f3}" />">
+                            <input type="hidden" name="f4" value="<c:out value="${f4}" />">
+                            <div>科目：<c:out value="${subject.getName()}" />（<c:out value="${f4}" />回）</div>
                             <table class="table table-hover">
                                 <tr>
                                     <th>入学年度</th>
@@ -86,14 +84,15 @@ pageEncoding="UTF-8" %>
                                         <td><c:out value="${test.getStudent().getName()}" /></td>
                                         <%-- 点数入力部 --%>
                                         <td>
-                                            <input type="number" name="point_<c:out value="${test.getStudent().getNo()}" />" value="${test.getPoint()}" min="0" max="100">
+                                            <%-- 値の範囲はサーブレット側で制御 --%>
+                                            <input type="number" name="point_<c:out value="${test.getStudent().getNo()}" />" value="${test.getPoint()}">
+                                            <%-- 入力値に対するエラーメッセージ --%>
+                                            <c:if test="${not empty errorMap.get(test.getStudent().getNo())}">
+                                                <div class="mt-2 text-warning">
+                                                    <c:out value="${errorMap.get(test.getStudent().getNo())}" />
+                                                </div>
+                                            </c:if>
                                         </td>
-                                        <%-- 入力値に対するエラーメッセージ --%>
-                                        <c:if test="${not empty errorMap.get(test.getStudent().getNo())}">
-                                            <div class="mt-2 text-warning">
-                                                <c:out value="${errorMap.get(test.getStudent().getNo())}" />
-                                            </div>
-                                        </c:if>
                                         <%-- 隠しフィールド 対象生徒列挙用 --%>
                                         <input type="hidden" name="regist" value="<c:out value='${test.getStudent().getNo()}' />">
                                     </tr>

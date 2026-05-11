@@ -31,10 +31,10 @@ public class TestRegistExecuteAction extends Action {
         School school = teacher.getSchool();
 
         // リクエストパラメーターを取得
+        String subjectCd = request.getParameter("f3");
+        String numStr = request.getParameter("f4");
 
-        String subjectCd = request.getParameter("subject");
-        String numStr = request.getParameter("count");
-        int num = Integer.parseInt(request.getParameter("count"));
+        int num = Integer.parseInt(numStr);
 
         // 入力された学生番号のリストを取得
         String[] studentNoSet = request.getParameterValues("regist");
@@ -47,6 +47,7 @@ public class TestRegistExecuteAction extends Action {
         Map<String, String> errorMap = new HashMap<>();
 
         if (studentNoSet != null) {
+
             for (String studentNo : studentNoSet) {
 
                 // JSPの point_${test.getStudent().getNo()} に対応する値を取得
@@ -92,14 +93,23 @@ public class TestRegistExecuteAction extends Action {
 
             // エラーがない → 保存
 
-            new TestDao().post(tests, school);
+            new TestDao().save(tests, school);
 
             // 完了画面にリダイレクト
             response.sendRedirect("TestRegistDone.action");
 
         } else {
             // エラーあり → 入力画面に戻す
+
+            // 推移前のパラメーターとエラーメッセージをセット
+
+            request.setAttribute("f1", request.getParameter("f1"));
+            request.setAttribute("f2", request.getParameter("f2"));
+            request.setAttribute("f3", request.getParameter("f3"));
+            request.setAttribute("f4", request.getParameter("f4"));
+
             request.setAttribute("errorMap", errorMap);
+
             request.getRequestDispatcher("TestRegist.action").forward(request, response);
         }
     }

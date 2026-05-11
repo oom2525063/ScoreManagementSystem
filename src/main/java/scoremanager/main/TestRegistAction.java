@@ -1,20 +1,36 @@
-// 部分完成 (要dao実装)
-// TODO: 検索押下後の未入力エラー表示実装
-
 package scoremanager.main;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import bean.Subject;
 import bean.Teacher;
+import bean.Test;
 import dao.ClassNumDao;
+import dao.SubjectDao;
+import dao.TestDao;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import tool.Action;
 
 public class TestRegistAction extends Action {
+
+    // パラメーターまたはリクエスト属性から値を取得する補助メソッド
+    private String getParamOrAttr(HttpServletRequest request, String name) {
+
+        String res = request.getParameter(name); // パラメーターから取得
+
+        if (res == null || res.isEmpty()) {
+            Object attr = request.getAttribute(name); // リクエスト属性から取得
+            if (attr != null) {
+                res = attr.toString(); // String化
+            }
+        }
+
+        return res;
+    }
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -25,10 +41,10 @@ public class TestRegistAction extends Action {
         Teacher teacher = (Teacher) session.getAttribute("user");
 
         // パラメーターを取得 (検索条件)
-        String entYearStr = request.getParameter("f1"); // 入学年度, int変数あり
-        String classNum = request.getParameter("f2"); // クラス番号
-        String subjectCd = request.getParameter("f3"); // 科目コード
-        String numStr = request.getParameter("f4"); // 回数, int変数あり
+        String entYearStr = this.getParamOrAttr(request, "f1"); // 入学年度, int変数あり
+        String classNum = this.getParamOrAttr(request, "f2"); // クラス番号
+        String subjectCd = this.getParamOrAttr(request, "f3"); // 科目コード
+        String numStr = this.getParamOrAttr(request, "f4"); // 回数, int変数あり
 
         // 画面のプルダウンリスト用データの取得
         // 入学年度リスト (現在の年から前後10年)
@@ -40,33 +56,38 @@ public class TestRegistAction extends Action {
 
         // 教員に紐づくクラス、科目を取得
         List<String> classNumList = new ClassNumDao().filter(teacher.getSchool());
-        // List<Subject> subjectList = new SubjectDao().filter(teacher.getSchool()); // 未実装
-        List<Object> subjectList = new ArrayList<>(); // 仮
+        List<Subject> subjectList = new SubjectDao().filter(teacher.getSchool());
+
+        Subject subject = null;
 
         // 全条件が指定されている場合 → 検索
 
         // 検索処理
-        if (entYearStr != null && !entYearStr.isEmpty() &&
-                classNum != null && !classNum.isEmpty() &&
-                subjectCd != null && !subjectCd.isEmpty() &&
-                numStr != null && !numStr.isEmpty()) { // f1~f4の全条件が指定されている
+        if (entYearStr != null && !entYearStr.isEmpty() && !entYearStr.equals("0") &&
+                classNum != null && !classNum.isEmpty() && !classNum.equals("0") &&
+                subjectCd != null && !subjectCd.isEmpty() && !subjectCd.equals("0") &&
+                numStr != null && !numStr.isEmpty() && !numStr.equals("0")) {// f1~f4の全条件が指定されている
 
             // 値変換
             int entYear = Integer.parseInt(entYearStr);
             int num = Integer.parseInt(numStr);
 
             // 選択された科目を取得
-            // Subject subject = student_dao.get(subjectCd, teacher.getSchool());
+            subject = new SubjectDao().get(subjectCd, teacher.getSchool());
 
-            // 条件に一致する成績(テスト (レスポンス内容))を取得
-            // List<Test> tests = new TestDao().filter(entYear, classNum, subject, num, teacher.getSchool());
+            List<Test> tests = new ArrayList<>();
+
+            if (subject != null) {
+                // 条件に一致する成績(テスト (レスポンス内容))を取得
+                tests = new TestDao().filter(entYear, classNum, subject, num, teacher.getSchool());
+            }
 
             // 検索結果をセット
-            // request.setAttribute("tests", tests);
-            request.setAttribute("tests", new ArrayList<>()); // 仮
+            request.setAttribute("tests", tests);
+
         }
 
-        // 表示用のデータをセット
+        // 表示(保持)用のデータをセット
         request.setAttribute("f1", entYearStr);
         request.setAttribute("f2", classNum);
         request.setAttribute("f3", subjectCd);
@@ -82,6 +103,8 @@ public class TestRegistAction extends Action {
         numList.add(1);
         numList.add(2);
         request.setAttribute("num_set", numList);
+
+        request.setAttribute("subject", subject);
 
         // JSPにフォワード
         request.getRequestDispatcher("test_regist.jsp").forward(request, response);
