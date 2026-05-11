@@ -14,7 +14,7 @@ public class StudentDao extends Dao {
     public String baseSql = "SELECT * FROM STUDENT "; // WHERE句前までの汎用SQL文
 
     // dbのクエリーからStudentオブジェクトを生成する汎用メソッド
-    public Student _studentCreateFromQueryResult(ResultSet rs) throws Exception {
+    public static Student _studentCreateFromQueryResult(ResultSet rs) throws Exception {
 
         Student s = new Student();
 
@@ -41,7 +41,7 @@ public class StudentDao extends Dao {
             try (ResultSet rs = st.executeQuery();) {
 
                 if (rs.next()) { // 結果が存在
-                    return this._studentCreateFromQueryResult(rs); // Studentオブジェクトを生成して返して終了
+                    return StudentDao._studentCreateFromQueryResult(rs); // Studentオブジェクトを生成して返して終了
                 }
 
                 return null; // 結果が存在しない
@@ -61,7 +61,7 @@ public class StudentDao extends Dao {
 
             while (rs.next()) { // 全レコードを抽出
                 if (school.getCd().equals(rs.getString("SCHOOL_CD"))) { // 学校コードが一致するか
-                    students.add(this._studentCreateFromQueryResult(rs)); // 一致 → Studentオブジェクトを生成してリストに追加
+                    students.add(StudentDao._studentCreateFromQueryResult(rs)); // 一致 → Studentオブジェクトを生成してリストに追加
                 }
             }
 

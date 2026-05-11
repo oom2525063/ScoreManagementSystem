@@ -14,9 +14,12 @@ import bean.Test;
 
 public class TestDao extends Dao {
 
-    public String baseSql = "SELECT t.STUDENT_NO, s.NAME AS STUDENT_NAME, t.CLASS_NUM, t.SUBJECT_CD, sub.NAME AS SUBJECT_NAME, t.NO, t.POINT FROM TEST AS t "
-            + "JOIN STUDENT s ON t.STUDENT_NO = s.NO "
-            + "JOIN SUBJECT sub ON t.SUBJECT_CD = sub.CD AND t.SCHOOL_CD = sub.SCHOOL_CD ";
+    public String baseSql = "SELECT s.*, " // 学生テーブルの全カラム
+            + "t.CLASS_NUM, t.SUBJECT_CD, t.NO, t.POINT, " // テストテーブルの一部カラム
+            + "sub.NAME AS SUBJECT_NAME "
+            + "FROM TEST AS t " // FROM
+            + "JOIN STUDENT s ON t.STUDENT_NO = s.NO " // 学生JOIN
+            + "JOIN SUBJECT sub ON t.SUBJECT_CD = sub.CD AND t.SCHOOL_CD = sub.SCHOOL_CD "; // 科目JOIN
 
     // 特定の成績を取得
     public Test get(Student student, Subject subject, School school, int no) throws Exception {
@@ -47,28 +50,26 @@ public class TestDao extends Dao {
     }
 
     // ResultSetからTestを作成
-    private Test postFilter(ResultSet rSet, School school) throws SQLException {
+    private Test postFilter(ResultSet rSet, School school) throws SQLException, Exception {
 
         Test test = new Test();
 
-        Student student = new Student();
-        student.setNo(rSet.getString("STUDENT_NO"));
-        student.setName(rSet.getString("STUDENT_NAME"));
-        student.setSchool(school);
+        Student student = StudentDao._studentCreateFromQueryResult(rSet);
+        test.setStudent(student);
 
         Subject subject = new Subject();
         subject.setCd(rSet.getString("SUBJECT_CD"));
         subject.setName(rSet.getString("SUBJECT_NAME"));
         subject.setSchool(school);
-
-        test.setStudent(student);
         test.setSubject(subject);
+
         test.setSchool(school);
         test.setNo(rSet.getInt("NO"));
         test.setPoint(rSet.getInt("POINT"));
         test.setClassNum(rSet.getString("CLASS_NUM"));
 
         return test;
+
     }
 
     // 指定された条件に一致する全成績を取得
