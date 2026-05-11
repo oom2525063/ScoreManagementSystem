@@ -27,7 +27,7 @@ public class Test implements Serializable {
         this.classNum = classNum;
     }
 
-    public Subject getsubject() {
+    public Subject getSubject() {
         return subject;
     }
 
