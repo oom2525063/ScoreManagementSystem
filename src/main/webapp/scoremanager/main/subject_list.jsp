@@ -33,17 +33,17 @@ pageEncoding="UTF-8" %>
 				<c:forEach var="s" items="${list}">
 
 					<tr>
-						<td>${s.cd}</td>
-						<td>${s.name}</td>
+						<td><c:out value="${s.cd}"></td>
+						<td><c:out value="${s.name}"></td>
 
 						<td>
-							<a href="SubjectUpdate.action?cd=${s.cd}">
+							<a href="SubjectUpdate.action?cd=<c:out value='${s.cd}'>">
 								変更
 							</a>
 						</td>
 
 						<td>
-							<a href="SubjectDelete.action?cd=${s.cd}">
+							<a href="SubjectDelete.action?cd=<c:out value='${s.cd}'>">
 								削除
 							</a>
 						</td>
