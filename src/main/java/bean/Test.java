@@ -19,7 +19,7 @@ public class Test implements Serializable {
         this.student = student;
     }
 
-    public String gerClassNum() {
+    public String getClassNum() {
         return classNum;
     }
 
