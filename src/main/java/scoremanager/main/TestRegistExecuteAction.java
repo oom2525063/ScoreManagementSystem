@@ -54,6 +54,7 @@ public class TestRegistExecuteAction extends Action {
 
                 // 得点入力がある場合のみ処理
                 if (pointStr != null && !pointStr.isEmpty()) {
+
                     try {
 
                         int point = Integer.parseInt(pointStr);
@@ -91,7 +92,7 @@ public class TestRegistExecuteAction extends Action {
 
             // エラーがない → 保存
 
-            new TestDao();.post(tests, school);
+            new TestDao().post(tests, school);
 
             // 完了画面にリダイレクト
             response.sendRedirect("TestRegistDone.action");
