@@ -16,7 +16,7 @@ public class ClassNumDao extends Dao {
 
         try (Connection con = getConnection();
                 PreparedStatement st = con
-                        .prepareStatement("SELECT * FROM CLASS_NUM WHERE SCHOOL_CD = ?, CLASS_NUM = ?;");) {
+                        .prepareStatement("SELECT * FROM CLASS_NUM WHERE SCHOOL_CD = ? AND CLASS_NUM = ?;");) {
 
             st.setString(1, school.getCd());
             st.setString(2, class_num);
@@ -52,7 +52,7 @@ public class ClassNumDao extends Dao {
 
         try (Connection con = getConnection();
                 PreparedStatement st = con
-                        .prepareStatement("SELECT * FROM CLASS_NUM WHERE SCHOOL_CD = ?");) {
+                        .prepareStatement("SELECT * FROM CLASS_NUM WHERE SCHOOL_CD = ?;");) {
 
             st.setString(1, school.getCd());
 
@@ -112,6 +112,25 @@ public class ClassNumDao extends Dao {
             }
 
             return false; // 更新に失敗
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // クラス番号を削除
+    public boolean delete(ClassNum class_num) throws Exception {
+
+        try (
+                Connection con = getConnection();
+                PreparedStatement st = con.prepareStatement(
+                        "DELETE FROM CLASS_NUM WHERE CLASS_NUM = ?;");) {
+
+            st.setString(1, class_num.getClass_num());
+
+            int lines = st.executeUpdate();
+
+            return lines >= 1; // 削除可否
 
         } catch (Exception e) {
             throw new RuntimeException(e);
