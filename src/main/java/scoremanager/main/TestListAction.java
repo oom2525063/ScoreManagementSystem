@@ -37,7 +37,7 @@ public class TestListAction extends Action {
 
         request.setAttribute("ent_year_set", entYearList);
         request.setAttribute("class_num_set", classNumList);
-        request.setAttribute("subjects", subjectList);
+        request.setAttribute("subject_set", subjectList);
 
         // ▼ パラメータ取得
         String f1 = request.getParameter("f1"); // 入学年度
@@ -73,7 +73,7 @@ public class TestListAction extends Action {
                 testList = testDao.filter(entYear, classNum, subject, testNo, school);
             }
 
-            request.setAttribute("test_list", testList);
+            request.setAttribute("test_set", testList);
         }
 
         // ▼ 学生検索（st）
@@ -81,7 +81,7 @@ public class TestListAction extends Action {
 
             if (isValid(f4)) {
 
-            	Student student = new StudentDao().get(f4);
+                Student student = new StudentDao().get(f4);
 
                 if (student != null) {
                     // 全科目 × 全テスト回数（1〜5）を総当たり
@@ -94,7 +94,7 @@ public class TestListAction extends Action {
                 }
             }
 
-            request.setAttribute("test_list", testList);
+            request.setAttribute("test_set", testList);
         }
 
         // ▼ JSP へフォワード

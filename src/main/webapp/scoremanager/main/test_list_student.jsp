@@ -3,138 +3,106 @@
 <%-- test_list_student.jsp(this): 科目側表示(要追記) + 学生側表示(要追記) ? --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-
-<c:import url="/common/base.jsp">
+<c:import url="/common/base.jsp" >
     <c:param name="title">
         得点管理システム
     </c:param>
 
     <c:param name="scripts"></c:param>
 
-    <c:param name="content">
-        <section class="me-4">
-
-            <h2 class="h3 mb-3 fw-norma bg-secondary bg-opacity-10 py-2 px-4">
-                成績一覧（[種別名]）
-            </h2>
-
-            <%-- 検索ボックス --%>
-            <div class="border mx-3 mb-3 py-3 px-5 rounded">
-
-                <%-- 科目情報 --%>
-                <form action="TestList.action" method="get" class="d-flex align-items-end gap-4">
-                    <p class="align-self-center pb-1 mb-0" style="min-width: 80px;">科目情報</p>
-
-                    <div class="d-flex align-items-end gap-3">
-
-                        <%-- 入学年度 --%>
-                        <div>
-                            <label class="form-label" for="ent-year-f1">入学年度</label>
-                            <select class="form-select" id="ent-year-f1" name="f1" style="min-width: 130px;">
-                                <option value="0">--------</option>
-                                <c:forEach var="year" items="${ent_year_set}">
-                                    <option value="${year}" <c:if test="${year == f1}">selected</c:if>>
-                                        ${year}
-                                    </option>
-                                </c:forEach>
-                            </select>
+        <c:param name="content">
+            <section class="me-4">
+                <h2 class="h3 mb-3 fw-norma bg-secondary bg-opacity-10 py-2 px-4">成績参照 ([項目名])</h2>
+                <%-- 検索ボックス --%>
+                <div class="border mx-3 mb-3 py-3 px-5 rounded">
+                    <%-- 科目情報 --%>
+                    <form action="TestListSubjectExecute.action" method="get" class="d-flex align-items-end gap-4">
+                        <%-- 隠しフィールド パラメーター保持用 --%>
+                        <input type="hidden" name="f1" value="<c:out value="${f1}" />">
+                        <input type="hidden" name="f2" value="<c:out value="${f2}" />">
+                        <input type="hidden" name="f3" value="<c:out value="${f3}" />">
+                        <p class="align-self-center pb-1 mb-0" style="min-width: 80px;">科目情報</p>
+                        <div class="d-flex align-items-end gap-3">
+                            <%-- 入学年度 --%>
+                            <div>
+                                <label class="form-label" for="ent-year-f1">入学年度</label>
+                                <select class="form-select" id="ent-year-f1" name="f1" style="min-width: 130px;">
+                                    <option value="0">--------</option>
+                                    <c:forEach var="year" items="${ent_year_set}">
+                                        <option value="${year}" <c:if test="${year == f1}">selected</c:if>>${year}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <%-- クラス --%>
+                            <div>
+                                <label class="form-label" for="class-num-f2">クラス</label>
+                                <select class="form-select" id="class-num-f2" name="f2" style="min-width: 130px;">
+                                    <option value="0">--------</option>
+                                    <c:forEach var="num" items="${class_num_set}">
+                                        <option value="<c:out value='${num}' />" <c:if test="${num == f2}">selected</c:if>><c:out value='${num}' /></option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <%-- 科目 --%>
+                            <div>
+                                <label class="form-label" for="subject-f3">科目</label>
+                                <select class="form-select" id="subject-f3" name="f3" style="min-width: 280px; max-width: 350px;">
+                                    <option value="0">--------</option>
+                                    <c:forEach var="subject" items="${subject_set}">
+                                        <option value="<c:out value='${subject.cd}' />" <c:if test="${subject.cd == f3}">selected</c:if>>${subject.name}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
                         </div>
-
-                        <%-- クラス --%>
+                        <%-- 科目側検索ボタン --%>
+                        <button class="btn btn-secondary ms-3" id="search-sj-button">検索</button>
+                        <%-- 項目識別用文字列 (sj: 科目検索) --%>
+                        <input type="hidden" name="f" value="sj">
+                        <%-- 3つの条件が指定されていない場合はサーブレット側からエラー表示を出す --%>
+                        <%-- TODO: サーブレット側実装 + 表示検証 --%>
+                        <div class="mt-2 text-warning"><c:out value="${errors.get('sj')}" /></div>
+                    </form>
+                    <hr class="my-3">
+                    <%-- 学生情報 --%>
+                    <form action="TestListStudentExecute.action" method="get" class="d-flex align-items-end gap-4">
+                        <%-- 隠しフィールド パラメーター保持用 --%>
+                        <input type="hidden" name="f4" value="<c:out value="${f4}" />">
+                        <p class="align-self-center pb-1 mb-0" style="min-width: 80px;">学生情報</p>
                         <div>
-                            <label class="form-label" for="class-num-f2">クラス</label>
-                            <select class="form-select" id="class-num-f2" name="f2" style="min-width: 130px;">
-                                <option value="0">--------</option>
-                                <c:forEach var="num" items="${class_num_set}">
-                                    <option value="<c:out value='${num}' />"
-                                        <c:if test="${num == f2}">selected</c:if>>
-                                        <c:out value='${num}' />
-                                    </option>
-                                </c:forEach>
-                            </select>
-                        </div>
-
-                        <%-- 科目 --%>
-                        <div>
-                            <label class="form-label" for="subject-f3">科目</label>
-                            <select class="form-select" id="subject-f3" name="f3"
-                                style="min-width: 280px; max-width: 350px;">
-                                <option value="0">--------</option>
-                                <c:forEach var="subject" items="${subjects}">
-                                    <option value="<c:out value='${subject.cd}' />"
-                                        <c:if test="${subject.cd == f3}">selected</c:if>>
-                                        ${subject.name}
-                                    </option>
-                                </c:forEach>
-                            </select>
-                        </div>
-
-                    </div>
-
-                    <%-- 科目側検索ボタン --%>
-                    <button class="btn btn-secondary ms-3" id="search-sj-button">検索</button>
-
-                    <%-- 項目識別用文字列 (sj: 科目検索) --%>
-                    <input type="hidden" name="f" value="sj">
-
-                    <div class="mt-2 text-warning">
-                        <c:out value="${errors.get('sj')}" />
-                    </div>
-                </form>
-
-                <hr class="my-3">
-
-                <%-- 学生情報 --%>
-                <form action="TestList.action" method="get" class="d-flex align-items-end gap-4">
-                    <p class="align-self-center pb-1 mb-0" style="min-width: 80px;">学生情報</p>
-
-                    <div>
-                        <label class="form-label" for="student-no-f4">学生番号</label>
-                        <input type="text" class="form-control" id="student-no-f4" name="f4"
-                            value="<c:out value='${f4}' />"
+                            <label class="form-label" for="student-no-f4">学生番号</label>
+                            <input type="text" class="form-control" id="student-no-f4" name="f4"
+                            value="<c:out value="${f4}" />"
                             placeholder="学生番号を入力してください" maxlength="10" style="min-width: 250px;">
-                    </div>
+                        </div>
+                        <%-- 学生側検索ボタン --%>
+                        <button class="btn btn-secondary ms-3" id="search-st-button">検索</button>
+                        <%-- 識別用文字列 (st: 学生検索) --%>
+                        <input type="hidden" name="f" value="st">
+                    </form>
+                </div>
 
-                    <%-- 学生側検索ボタン --%>
-                    <button class="btn btn-secondary ms-3" id="search-st-button">検索</button>
+                <%-- 検索結果表示 --%>
+                <c:choose>
 
-                    <%-- 識別用文字列 (st: 学生検索) --%>
-                    <input type="hidden" name="f" value="st">
-                </form>
+                    <%-- 科目検索（f = "sj"） --%>
+                    <c:when test="${f == 'sj'}">
 
-            </div>
+                        <%-- <h3 class="h5 mt-4">科目別成績一覧</h3> --%>
 
-            <%-- 利用方法案内メッセージ --%>
-            <c:if test="${empty f}">
-                <p class="text-info">
-                    科目情報を選択または学生情報を入力して検索ボタンをクリックしてください
-                </p>
-            </c:if>
+                        <c:if test="${empty test_set}">
+                            <p class="text-danger">該当する成績データがありませんでした。</p>
+                        </c:if>
 
-            <%-- 検索結果表示 --%>
-            <c:choose>
+                        <c:if test="${not empty test_set}">
+                            <div>検索結果：${test_set.size()}件</div>
 
-                <%-- 科目検索（f = "sj"） --%>
-                <c:when test="${f == 'sj'}">
-
-                    <h3 class="h5 mt-4">科目別成績一覧</h3>
-
-                    <c:if test="${empty test_list}">
-                        <p class="text-danger">該当する成績データがありませんでした。</p>
-                    </c:if>
-
-                    <c:if test="${not empty test_list}">
-                        <div>検索結果：${test_list.size()}件</div>
-
-                        <form action="TestRegist.action" method="post">
-
-                            <input type="hidden" name="count" value="${test_list.size()}">
-
+                            <%-- <input type="hidden" name="count" value="${test_set.size()}">
+                            
                             <input type="hidden" name="f1" value="${f1}">
                             <input type="hidden" name="f2" value="${f2}">
                             <input type="hidden" name="f3" value="${f3}">
                             <input type="hidden" name="f5" value="${f5}">
-                            <input type="hidden" name="f" value="sj">
+                            <input type="hidden" name="f" value="sj"> --%>
 
                             <table class="table table-hover mt-3">
                                 <tr>
@@ -143,13 +111,13 @@
                                     <th>点数</th>
                                 </tr>
 
-                                <c:forEach var="t" items="${test_list}" varStatus="st">
+                                <c:forEach var="t" items="${test_set}" varStatus="st">
                                     <tr>
                                         <td>${t.student.no}</td>
                                         <td>${t.student.name}</td>
                                         <td>
                                             <input type="text" name="point_${st.index}" value="${t.point}"
-                                                style="width:80px;">
+                                            style="width:80px;">
 
                                             <input type="hidden" name="student_no_${st.index}" value="${t.student.no}">
                                             <input type="hidden" name="subject_cd_${st.index}" value="${t.subject.cd}">
@@ -159,50 +127,43 @@
                                 </c:forEach>
                             </table>
 
-                            <c:if test="${not empty errors}">
-                                <p class="text-danger">${errors.point}</p>
-                            </c:if>
+                        </c:if>
 
-                            <button type="submit" class="btn btn-primary">登録して終了</button>
+                    </c:when>
 
-                        </form>
-                    </c:if>
+                    <%-- 学生検索（f = "st"） --%>
+                    <c:when test="${f == 'st'}">
 
-                </c:when>
+                        <%-- <h3 class="h5 mt-4">学生別成績一覧</h3> --%>
 
-                <%-- 学生検索（f = "st"） --%>
-                <c:when test="${f == 'st'}">
+                        <c:if test="${empty test_set}">
+                            <p class="text-danger">該当する学生の成績データがありませんでした。</p>
+                        </c:if>
 
-                    <h3 class="h5 mt-4">学生別成績一覧</h3>
+                        <c:if test="${not empty test_set}">
+                            <div>検索結果：${test_set.size()}件</div>
 
-                    <c:if test="${empty test_list}">
-                        <p class="text-danger">該当する学生の成績データがありませんでした。</p>
-                    </c:if>
-
-                    <c:if test="${not empty test_list}">
-                        <div>検索結果：${test_list.size()}件</div>
-
-                        <table class="table table-hover mt-3">
-                            <tr>
-                                <th>科目</th>
-                                <th>回数</th>
-                                <th>点数</th>
-                            </tr>
-
-                            <c:forEach var="t" items="${test_list}">
+                            <table class="table table-hover mt-3">
                                 <tr>
-                                    <td>${t.subject.name}</td>
-                                    <td>${t.no}</td>
-                                    <td>${t.point}</td>
+                                    <th>科目</th>
+                                    <th>回数</th>
+                                    <th>点数</th>
                                 </tr>
-                            </c:forEach>
-                        </table>
-                    </c:if>
 
-                </c:when>
+                                <c:forEach var="t" items="${test_set}">
+                                    <tr>
+                                        <td>${t.subject.name}</td>
+                                        <td>${t.no}</td>
+                                        <td>${t.point}</td>
+                                    </tr>
+                                </c:forEach>
+                            </table>
+                        </c:if>
 
-            </c:choose>
+                    </c:when>
 
-        </section>
-    </c:param>
-</c:import>
+                </c:choose>
+
+            </section>
+        </c:param>
+    </c:import>
