@@ -44,7 +44,7 @@
                                 <label class="form-label" for="subject-f3">科目</label>
                                 <select class="form-select" id="subject-f3" name="f3" style="min-width: 280px; max-width: 350px;">
                                     <option value="0">--------</option>
-                                    <c:forEach var="subject" items="${subjects}">
+                                    <c:forEach var="subject" items="${subject_set}">
                                         <option value="<c:out value='${subject.cd}' />" <c:if test="${subject.cd == f3}">selected</c:if>>${subject.name}</option>
                                     </c:forEach>
                                 </select>

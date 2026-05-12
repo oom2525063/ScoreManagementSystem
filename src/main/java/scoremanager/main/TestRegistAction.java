@@ -41,10 +41,10 @@ public class TestRegistAction extends Action {
         Teacher teacher = (Teacher) session.getAttribute("user");
 
         // パラメーターを取得 (検索条件)
-        String entYearStr = this.getParamOrAttr(request, "f1"); // 入学年度, int変数あり
+        String entYearStr = this.getParamOrAttr(request, "f1"); // 入学年度, int変数あり(使用部で変換)
         String classNum = this.getParamOrAttr(request, "f2"); // クラス番号
         String subjectCd = this.getParamOrAttr(request, "f3"); // 科目コード
-        String numStr = this.getParamOrAttr(request, "f4"); // 回数, int変数あり
+        String numStr = this.getParamOrAttr(request, "f4"); // 回数, int変数あり(使用部で変換)
 
         // 画面のプルダウンリスト用データの取得
         // 入学年度リスト (現在の年から前後10年)
@@ -83,7 +83,7 @@ public class TestRegistAction extends Action {
             }
 
             // 検索結果をセット
-            request.setAttribute("tests", tests);
+            request.setAttribute("test_set", tests);
 
         }
 
@@ -96,7 +96,7 @@ public class TestRegistAction extends Action {
         // 選択
         request.setAttribute("ent_year_set", entYearList);
         request.setAttribute("class_num_set", classNumList);
-        request.setAttribute("subjects", subjectList);
+        request.setAttribute("subject_set", subjectList);
 
         // 回数選択 (2回)
         List<Integer> numList = new ArrayList<>();
@@ -104,7 +104,7 @@ public class TestRegistAction extends Action {
         numList.add(2);
         request.setAttribute("num_set", numList);
 
-        request.setAttribute("subject", subject);
+        request.setAttribute("subject", subject); // 検索時の名前表示用obj
 
         // JSPにフォワード
         request.getRequestDispatcher("test_regist.jsp").forward(request, response);

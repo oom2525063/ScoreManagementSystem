@@ -38,7 +38,7 @@ pageEncoding="UTF-8" %>
                             <label class="form-label" for="test-f3-select">科目</label>
                             <select class="form-select" id="test-f3-select" name="f3">
                                 <option value="0">--------</option>
-                                <c:forEach var="subject" items="${subjects}">
+                                <c:forEach var="subject" items="${subject_set}">
                                     <%-- 現在のnumと選択されていたf3が一致していた場合selectedを追記 --%>
                                     <option value="<c:out value='${subject.getCd()}' />" <c:if test="${subject.getCd() == f3}">selected</c:if>><c:out value="${subject.getName()}" /></option>
                                 </c:forEach>
@@ -60,7 +60,8 @@ pageEncoding="UTF-8" %>
                     </div>
                 </form>
                 <c:choose>
-                    <c:when test="${tests.size() > 0}">
+                    <%-- データ表示 --%>
+                    <c:when test="${test_set.size() > 0}">
                         <form method="post" action="TestRegistExecute.action">
                             <%-- 隠しフィールド パラメーター保持用 --%>
                             <input type="hidden" name="f1" value="<c:out value="${f1}" />">
@@ -76,7 +77,7 @@ pageEncoding="UTF-8" %>
                                     <th>氏名</th>
                                     <th>点数</th>
                                 </tr>
-                                <c:forEach var="test" items="${tests}">
+                                <c:forEach var="test" items="${test_set}">
                                     <tr>
                                         <td>${test.getStudent().getEntYear()}</td>
                                         <td><c:out value="${test.getClassNum()}" /></td>
