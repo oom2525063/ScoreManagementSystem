@@ -16,7 +16,11 @@
                 <%-- 検索ボックス --%>
                 <div class="border mx-3 mb-3 py-3 px-5 rounded">
                     <%-- 科目情報 --%>
-                    <form action="TestList.action" method="get" class="d-flex align-items-end gap-4">
+                    <form action="TestListSubjectExecute.action" method="get" class="d-flex align-items-end gap-4">
+                        <%-- 隠しフィールド パラメーター保持用 --%>
+                        <input type="hidden" name="f1" value="<c:out value="${f1}" />">
+                        <input type="hidden" name="f2" value="<c:out value="${f2}" />">
+                        <input type="hidden" name="f3" value="<c:out value="${f3}" />">
                         <p class="align-self-center pb-1 mb-0" style="min-width: 80px;">科目情報</p>
                         <div class="d-flex align-items-end gap-3">
                             <%-- 入学年度 --%>
@@ -60,7 +64,9 @@
                     </form>
                     <hr class="my-3">
                     <%-- 学生情報 --%>
-                    <form action="TestList.action" method="get" class="d-flex align-items-end gap-4">
+                    <form action="TestListStudentExecute.action" method="get" class="d-flex align-items-end gap-4">
+                        <%-- 隠しフィールド パラメーター保持用 --%>
+                        <input type="hidden" name="f4" value="<c:out value="${f4}" />">
                         <p class="align-self-center pb-1 mb-0" style="min-width: 80px;">学生情報</p>
                         <div>
                             <label class="form-label" for="student-no-f4">学生番号</label>
