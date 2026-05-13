@@ -62,7 +62,7 @@ public class TestListSubjectExecuteAction extends Action {
         }
 
         // 検索結果
-        List<Test> tests = new ArrayList<>();
+        List<Test> test_set = new ArrayList<>();
 
         // TestDao
         TestDao dao = new TestDao();
@@ -75,7 +75,7 @@ public class TestListSubjectExecuteAction extends Action {
             f1 != null &&
             !f1.equals("0")) {
 
-            tests = dao.filter(
+            test_set = dao.filter(
                     Integer.parseInt(f1),
                     f2,
                     subject,
@@ -84,7 +84,7 @@ public class TestListSubjectExecuteAction extends Action {
         }
 
         // JSPへ渡す
-        req.setAttribute("tests", tests);
+        req.setAttribute("tests", test_set);
 
         req.setAttribute("f1", f1);
 
