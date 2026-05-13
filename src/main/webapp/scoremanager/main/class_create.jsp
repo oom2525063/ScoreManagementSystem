@@ -14,9 +14,8 @@
             <form action="ClassCreateExecute.action" method="get">
                 <!-- 学校 -->
                 <div class="mb-3">
-                    <%-- ユーザーの学校を対象とする --%>
+                    <%-- ユーザー(Teacher)の学校を対象とする --%>
                     <label class="form-label">学校</label>
-                    <input type="hidden" name="school_cd" value="<c:out value='${teacher.getSchool().getCd()}' />">
                     <p><c:out value="${teacher.getSchool().getName()}" /></p>
                 </div>
                 <!-- クラス番号 -->

@@ -72,7 +72,7 @@ pageEncoding="UTF-8" %>
                         extend: "copy",
                         text: "コピー",
                         exportOptions: {
-                            columns: ":not(:eq(0))"  <%-- 選択列(1列目)以外 --%>
+                            columns: ":not(:eq(2))"  <%-- 選択列(1列目)以外 --%>
                         }
                     },
                     {
@@ -80,34 +80,25 @@ pageEncoding="UTF-8" %>
                         text: "CSV",
                         bom: true,  <%-- 文字化け対策 --%>
                         exportOptions: {
-                            columns: ":not(:eq(0))"
+                            columns: ":not(:eq(2))"
                         }
                     },
                     {
                         extend: "excel",
                         text: "Excel",
                         exportOptions: {
-                            columns: ":not(:eq(0))"
+                            columns: ":not(:eq(2))"
                         }
                     },
                     {
                         extend: "print",
                         text: "印刷",
                         exportOptions: {
-                            columns: ":not(:eq(0))"
-                        },
-                        <%-- 文字サイズ調整 --%>
-                        customize: function (win) {
-                            $(win.document.body).css("font-size", "8pt");
-                            $(win.document.body).find("table")
-                            .addClass("compact")
-                            .css("font-size", "inherit");
+                            columns: ":not(:eq(2))"
                         }
                     }
                     ],
-                    columnDefs: [
-                    
-                    ],
+                    columnDefs: [],
                 });
             });
         </script>
