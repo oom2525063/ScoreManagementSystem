@@ -99,7 +99,7 @@ public class TestListSubjectExecuteAction extends Action {
         req.setAttribute("subjects", subjectList);
 
         // 画面遷移
-        req.getRequestDispatcher("test_list_subject.jsp")
+        req.getRequestDispatcher("test_list_student.jsp")
                 .forward(req, res);
     }
 }
