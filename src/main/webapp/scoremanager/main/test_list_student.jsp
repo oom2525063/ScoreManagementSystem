@@ -1,6 +1,5 @@
 <%-- 成績一覧(科目、学生)JSP --%>
 <%-- test_list.jsp: 検索用初期画面 --%>
-<%-- test_list_student.jsp(this): 科目側表示(要追記) + 学生側表示(要追記) ? --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
@@ -11,6 +10,7 @@
     <c:param name="scripts"></c:param>
     <c:param name="content">
         <section class="me-4" style="width: 100%; max-width: 1200px;">
+        <%-- 画面タイトル切り替え --%>
             <h2 class="h3 mb-3 fw-normal bg-secondary bg-opacity-10 py-2 px-4">
 		    <c:choose>
 		        <c:when test="${f == 'sj'}">
@@ -87,17 +87,13 @@
 
                     <%-- 項目識別用文字列 (sj: 科目検索) --%>
                     <input type="hidden" name="f" value="sj">
-
-                    <%-- 3つの条件が指定されていない場合はサーブレット側からエラー表示を出す --%>
-                    <%-- TODO: サーブレット側実装 + 表示検証 --%>
-                    <div class="mt-2">
-                        <c:if test="${not empty errors.get('sj')}">
-                            <span class="text-warning">
-                                入学年度とクラスと科目を選択してください
-                            </span>
-                        </c:if>
-                    </div>
                 </form>
+                <%-- 科目検索エラーメッセージ表示 --%>
+				<c:if test="${not empty errors.get('sj')}">
+				    <div class="mt-2 text-warning">
+				        入学年度とクラスと科目を選択してください。
+				    </div>
+				</c:if>
                 <hr class="my-3">
 
                 <%-- 学生情報 --%>
@@ -174,7 +170,6 @@
                 <c:when test="${f == 'st'}">
 
                     <%-- <h3 class="h5 mt-4">学生別成績一覧</h3> --%>
-
                     <c:if test="${empty test_set}">
                         <p class="text-danger">成績情報が存在しませんでした</p>
                     </c:if>
