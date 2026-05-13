@@ -17,7 +17,7 @@ public class TestListSubjectDao extends Dao{
 			+ "FROM\n"
 			+ "    STUDENT LEFT JOIN TEST ON TEST.STUDENT_NO = STUDENT.NO\n"
 			+ "WHERE\n"
-			+ "    STUDENT.ENT_YEAR = '2022' AND STUDENT.CLASS_NUM = '201' AND STUDENT.SCHOOL_CD = 'oom';";
+			+ "    STUDENT.ENT_YEAR = ? AND STUDENT.CLASS_NUM = ? AND STUDENT.SCHOOL_CD = ?;";
 	
 	public List<TestListSubject> postFilter(ResultSet resultSet) throws Exception {
 
@@ -44,23 +44,25 @@ public class TestListSubjectDao extends Dao{
             } 
 	}
 	
-	public List<TestListSubject> filter(School school ,int entYear, String classNum ,Subject subject) throws Exception {
-		 List<TestListSubject> testList = new ArrayList<>();
+	public List<TestListSubject> filter(int entYear, String classNum, Subject subject, School school) throws Exception {
+
+		List<TestListSubject> testList = new ArrayList<>();
+
         try (Connection con = getConnection();
                 PreparedStatement st = con.prepareStatement(baseSql)) {
 
-        	st.setString(1, subject.getCd());
-        	st.setString(2, school.getCd());
-            st.setInt(3, entYear);
-            st.setString(4, classNum);
+            st.setInt(1, entYear);
+            st.setString(2, classNum);
+        	st.setString(3, school.getCd());
 
             try (ResultSet rs = st.executeQuery()) {
                 // ResultSetからBeanへの変換処理（postFilter的な役割）
-                testList = postFilter(rs);
+                testList = this.postFilter(rs);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
         return testList;
         }
 	}
