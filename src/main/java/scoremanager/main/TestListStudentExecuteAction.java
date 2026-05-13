@@ -8,11 +8,11 @@ import bean.School;
 import bean.Student;
 import bean.Subject;
 import bean.Teacher;
-import bean.Test;
+import bean.TestListStudent;
 import dao.ClassNumDao;
 import dao.StudentDao;
 import dao.SubjectDao;
-import dao.TestDao;
+import dao.TestListStudentDao;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -51,33 +51,23 @@ public class TestListStudentExecuteAction extends Action {
         List<Subject> subjectList =
                 new SubjectDao().filter(school);
 
-        // 検索結果
-        List<Test> testList = new ArrayList<>();
-
         // 学生取得
         Student student =
                 new StudentDao().get(f4);
+        
+        // TODO: 学生が存在しなかった場合の処理を追加
+        // 
 
+        
+        // 検索結果
+        List<TestListStudent> testList = new ArrayList<>();
+
+        // TODO: ここだけ学生が存在したときに取得
+        
         // TestDao
-        TestDao dao = new TestDao();
-
-        // 成績検索
-        if (student != null) {
-
-            for (Subject subject : subjectList) {
-
-                for (int no = 1; no <= 5; no++) {
-
-                    Test test =
-                            dao.get(student, subject, school, no);
-
-                    if (test != null) {
-
-                        testList.add(test);
-                    }
-                }
-            }
-        }
+        TestListStudentDao dao = new TestListStudentDao();
+        
+        testList = dao.filter(student);
 
         // JSPへ渡す
         req.setAttribute("test_set", testList);

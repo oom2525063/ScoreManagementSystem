@@ -100,7 +100,7 @@
                 <form action="TestListStudentExecute.action" method="get" class="d-flex align-items-end gap-4">
 
                     <%-- 隠しフィールド パラメーター保持用 --%>
-                    <input type="hidden" name="f4" value="<c:out value="${f4}" />">
+                    <%-- <input type="hidden" name="f4" value="<c:out value="${f4}" />"> --%>
                     <p class="align-self-center pb-1 mb-0" style="min-width: 80px;">学生情報</p>
                     <div>
                         <label class="form-label" for="student-no-f4">学生番号</label>
