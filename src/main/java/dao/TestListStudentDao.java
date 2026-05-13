@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import bean.School;
+import bean.Student;
 import bean.TestListStudent;
 
 public class TestListStudentDao extends Dao{
@@ -45,12 +45,12 @@ public class TestListStudentDao extends Dao{
     }
 
 
-	public List<TestListStudent> filter(School school) throws Exception {
+	public List<TestListStudent> filter(Student student) throws Exception {
 
         try (Connection con = getConnection();
                 PreparedStatement st = con.prepareStatement(this.baseSql);) {
 
-            st.setString(1, school.getCd());
+            st.setString(1, student.getNo());
 
             return this.postFilter(st.executeQuery());
 
