@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import bean.School;
 import bean.Subject;
@@ -13,37 +15,54 @@ import bean.TestListSubject;
 public class TestListSubjectDao extends Dao{
 	
 	public String baseSql = "SELECT\n"
-			+ "    ENT_YEAR, STUDENT.NO, STUDENT.NAME, STUDENT.CLASS_NUM, TEST.POINT\n"
+			+ "    ENT_YEAR, STUDENT.NO, STUDENT.NAME, STUDENT.CLASS_NUM, TEST.NO AS T_NO TEST.POINT\n"
 			+ "FROM\n"
 			+ "    STUDENT LEFT JOIN TEST ON TEST.STUDENT_NO = STUDENT.NO\n"
 			+ "WHERE\n"
-			+ "    STUDENT.ENT_YEAR = ? AND STUDENT.CLASS_NUM = ? AND STUDENT.SCHOOL_CD = ?;";
-	
-	public List<TestListSubject> postFilter(ResultSet resultSet) throws Exception {
+			+ "    STUDENT.ENT_YEAR = ? AND STUDENT.CLASS_NUM = ? AND STUDENT.SCHOOL_CD = ?"
+			+ "ORDER BY\n"
+			+ "  STUDENT.NO ASC, TEST.NO ASC;";
+		
+    public List<TestListSubject> postFilter(ResultSet rSet) throws Exception {
 
-        List<TestListSubject> testList = new ArrayList<>();
+        List<TestListSubject> testList = new ArrayList<>(); // 結果
+        Map<String, TestListSubject> studentMap = new HashMap<>(); // pointを入れるための一時的な保管
+ 
+        while (rSet.next()) { // データ取り出し
+ 
+            String studentNo = rSet.getString("STUDENT_NO");
+ 
+            TestListSubject bean; // 追加するobj
+ 
+            if (studentMap.containsKey(studentNo)) {
+                // 作成済み → 点数追加のみ
+                bean = studentMap.get(studentNo);
+            } else {
+                // 未作成 → 基本情報をセット
+                bean = new TestListSubject();
+                bean.setEntYear(rSet.getInt("ENT_YEAR"));
+                bean.setStudentNo(studentNo);
+                bean.setStudentName(rSet.getString("NAME"));
+                bean.setClassNum(rSet.getString("CLASS_NUM"));
+               
+                // 得点格納用Mapを初期化
+                bean.setPoints(new HashMap<Integer, Integer>());
+                studentMap.put(studentNo, bean);
 
-        try (ResultSet rs = resultSet) {
-
-            while (rs.next()) { 
-            	 TestListSubject bean = new TestListSubject();
-                 bean.setStudentNo(rs.getString("NO"));
-                 bean.setStudentName(rs.getString("NAME"));
-                 bean.setEntYear(rs.getInt("ENT_YEAR"));
-                 bean.setClassNum(rs.getString("CLASS_NUM"));
-                
-                 
-                 int testNo = rs.getInt("TEST_COUNT");
-                 int point = rs.getInt("POINT");
-                 if (!rs.wasNull()) {
-                     bean.putPoint(testNo, point);
-                }
-                 testList.add(bean);
+                testList.add(bean);
             }
-            return testList; 
-            } 
+ 
+            // テスト回数と得点をオブジェクトに追加
+            int testNo = rSet.getInt("TEST_NO");
+            if (!rSet.wasNull()) {
+                int point = rSet.getInt("POINT");
+                bean.putPoint(testNo, point);
+            }
+        }
+ 
+        return testList;
 	}
-	
+
 	public List<TestListSubject> filter(int entYear, String classNum, Subject subject, School school) throws Exception {
 
 		List<TestListSubject> testList = new ArrayList<>();
@@ -66,6 +85,5 @@ public class TestListSubjectDao extends Dao{
         return testList;
         }
 	}
-}
-	
 
+}
