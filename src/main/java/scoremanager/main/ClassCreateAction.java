@@ -17,19 +17,13 @@ public class ClassCreateAction extends Action {
 
         // Teacher(ユーザー)取得
         Teacher teacher = (Teacher) session.getAttribute("user");
-
-        // 処理
-
-        HashMap<String, String> errorList = new HashMap<>();
+        request.setAttribute("teacher", teacher);
 
         // 保存
 
-        request.setAttribute("school_cd", request.getAttribute("school_cd"));
-        request.setAttribute("class_num", request.getAttribute("class_num"));
+        request.setAttribute("class_num", request.getParameter("class_num"));
 
-        request.setAttribute("teacher", teacher);
-
-        request.setAttribute("error_set", errorList);
+        request.setAttribute("error_set", new HashMap<>());
 
         request.getRequestDispatcher("class_create.jsp").forward(request, response);
     }

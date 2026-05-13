@@ -24,9 +24,9 @@ public class ClassListAction extends Action {
 
         School school = teacher.getSchool();
 
-        // 教師が所属する学校の全クラス番号を取得
+        // 教師が所属する学校の全クラスの番号を取得
         ClassNumDao classNumDao = new ClassNumDao();
-        List<String> classNumCdList = classNumDao.filter(teacher.getSchool());
+        List<String> classNumCdList = classNumDao.filter(teacher.getSchool());  // 全クラスのobj
 
         ArrayList<ClassNum> classNumList = new ArrayList<>();
         for (String cd : classNumCdList) {

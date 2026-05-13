@@ -19,19 +19,27 @@ public class ClassCreateExecuteAction extends Action {
 
         // Teacher(ユーザー)取得
         Teacher teacher = (Teacher) session.getAttribute("user");
+        request.setAttribute("teacher", teacher); // 学校名表示用
+
+        // 終了前の属性保存
+        request.setAttribute("class_num", request.getParameter("class_num"));
 
         HashMap<String, String> errorList = new HashMap<>();
 
         // 入力値検証
 
+        String classNumError = null;
         String classNum = request.getParameter("class_num");
+
         if (classNum == null || classNum.isEmpty()) {
-            errorList.put("class_num", "クラス番号を入力してください");
-            request.setAttribute("error_set", errorList);
-            request.getRequestDispatcher("class_create.jsp").forward(request, response);
-            return;
+            classNumError = "クラス番号を入力してください";
         } else if (classNum.length() > 5) {
-            errorList.put("class_num", "クラス番号は5文字以内で入力してください");
+            classNumError = "クラス番号は5文字以内で入力してください";
+        }
+
+        // エラーがあれば修正
+        if (classNumError != null) {
+            errorList.put("class_num", classNumError);
             request.setAttribute("error_set", errorList);
             request.getRequestDispatcher("class_create.jsp").forward(request, response);
             return;

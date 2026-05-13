@@ -11,15 +11,15 @@ import tool.Action;
 public class ClassDeleteExecuteAction extends Action {
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        HttpSession session = req.getSession(); // セッション取得
+        HttpSession session = request.getSession(); // セッション取得
 
         // Teacher(ユーザー)取得
         Teacher teacher = (Teacher) session.getAttribute("user");
 
         // パラメーター取得
-        String cd = req.getParameter("cd");
+        String cd = request.getParameter("cd");
 
         ClassNumDao classNumDao = new ClassNumDao();
 
@@ -27,16 +27,21 @@ public class ClassDeleteExecuteAction extends Action {
         ClassNum classNum = classNumDao.get(cd, teacher.getSchool());
 
         if (classNum == null) {
-            // クラスが見つからなかった or 違う学校
-            res.sendRedirect(req.getContextPath() + "/error.jsp"); // エラーページにリダイレクトして終了
+            // クラスが見つからなかった or 違う学校(権限不足)
+            response.sendRedirect(request.getContextPath() + "/error.jsp"); // エラーページにリダイレクトして終了
             return;
         }
 
         // クラス削除
-        classNumDao.delete(classNum);
+        boolean result = classNumDao.delete(classNum);
+        if (result == false) {
+            // 削除失敗
+            response.sendRedirect(request.getContextPath() + "/error.jsp"); // エラーページにリダイレクトして終了
+            return;
+        }
 
         // 完了ページにリダイレクト
-        res.sendRedirect("ClassDeleteDone.action");
+        response.sendRedirect("ClassDeleteDone.action");
     }
 
 }

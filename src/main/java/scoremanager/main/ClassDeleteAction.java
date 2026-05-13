@@ -27,7 +27,7 @@ public class ClassDeleteAction extends Action {
         ClassNum classNum = classNumDao.get(cd, teacher.getSchool());
 
         if (classNum == null) {
-            // クラスが見つからなかった or 違う学校
+            // クラスが見つからなかった or 違う学校(権限不足)
             response.sendRedirect("ClassList.action"); // 一覧にリダイレクトして終了
             return;
         }
