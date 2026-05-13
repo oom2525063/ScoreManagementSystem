@@ -54,6 +54,7 @@ public class TestListStudentExecuteAction extends Action {
         // 学生取得
         Student student =
                 new StudentDao().get(f4);
+        req.setAttribute("student", student);
         
         // TODO: 学生が存在しなかった場合の処理を追加
         // 
