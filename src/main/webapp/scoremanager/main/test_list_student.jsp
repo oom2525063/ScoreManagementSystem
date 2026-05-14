@@ -131,9 +131,14 @@
 
                     <%-- 科目検索（f = "sj"） --%>
                     <c:when test="${f == 'sj'}">
-                        <c:if test="${empty test_set}">
+                    	<c:if test="${not empty error}">
+						    <div class="text-warning">
+						        ${error}
+						    </div>
+						</c:if>
+                        <%-- <c:if test="${empty test_set}">
                             <p>成績情報が存在しませんでした</p>
-                        </c:if>
+                        </c:if>--%>
                         <c:if test="${not empty test_set}">
                             <div>検索結果：${test_set.size()}件</div>
                             <table class="table table-hover mt-3">
@@ -165,6 +170,13 @@
 
                     <%-- 学生検索（f = "st"） --%>
                     <c:when test="${f == 'st'}">
+                    
+                    	<%-- エラーメッセージ表示 --%>
+					    <c:if test="${not empty error}">
+					        <div class="text-warning">
+					            ${error}
+					        </div>
+					    </c:if>
 
                         <c:if test="${empty test_set}">
                             <p>成績情報が存在しませんでした</p>

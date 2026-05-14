@@ -56,19 +56,22 @@ public class TestListStudentExecuteAction extends Action {
                 new StudentDao().get(f4);
         req.setAttribute("student", student);
         
-        // TODO: 学生が存在しなかった場合の処理を追加
-        // 
-
-        
         // 検索結果
         List<TestListStudent> testList = new ArrayList<>();
-
-        // TODO: ここだけ学生が存在したときに取得
         
+        //学生が存在しなかった場合
+        if (student == null) {
+        	
+            req.setAttribute("error", "学生情報が存在しませんでした。");
+            
+        } else {
+        // 学生が存在したときに取得       
         // TestDao
         TestListStudentDao dao = new TestListStudentDao();
         
         testList = dao.filter(student);
+        
+        }
 
         // JSPへ渡す
         req.setAttribute("test_set", testList);
