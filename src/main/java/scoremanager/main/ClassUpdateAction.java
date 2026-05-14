@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import tool.Action;
 
-public class ClassDeleteAction extends Action {
+public class ClassUpdateAction extends Action {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -17,14 +17,13 @@ public class ClassDeleteAction extends Action {
 
         // Teacher(ユーザー)取得
         Teacher teacher = (Teacher) session.getAttribute("user");
+        request.setAttribute("teacher", teacher);
 
         // パラメーター取得
-        String classNUm = request.getParameter("class_num");
-
-        ClassNumDao classNumDao = new ClassNumDao();
+        String classNumPram = request.getParameter("class_num");
 
         // クラスを取得 (学校照合)
-        ClassNum classNum = classNumDao.get(classNUm, teacher.getSchool());
+        ClassNum classNum = new ClassNumDao().get(classNumPram, teacher.getSchool());
 
         if (classNum == null) {
             // クラスが見つからなかった or 違う学校(権限不足)
@@ -35,7 +34,7 @@ public class ClassDeleteAction extends Action {
         request.setAttribute("class_", classNum);
 
         // 確認画面にフォワード
-        request.getRequestDispatcher("class_delete.jsp").forward(request, response);
+        request.getRequestDispatcher("class_update.jsp").forward(request, response);
     }
 
 }

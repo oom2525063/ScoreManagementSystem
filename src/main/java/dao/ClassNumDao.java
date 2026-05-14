@@ -100,10 +100,11 @@ public class ClassNumDao extends Dao {
         try (
                 Connection con = getConnection();
                 PreparedStatement st = con.prepareStatement(
-                        "UPDATE CLASS_NUM SET CLASS_NUM = ? WHERE SCHOOL_CD = ?;");) {
+                        "UPDATE CLASS_NUM SET CLASS_NUM = ? WHERE CLASS_NUM = ? AND SCHOOL_CD = ?;");) {
 
             st.setString(1, newClassNum);
-            st.setString(2, class_num.getSchool().getCd());
+            st.setString(2, class_num.getClass_num());
+            st.setString(3, class_num.getSchool().getCd());
 
             int lines = st.executeUpdate();
 

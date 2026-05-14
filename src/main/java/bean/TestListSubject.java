@@ -57,7 +57,7 @@ public class TestListSubject {
     }
 
     // 指定キーの点数取得
-    public int getPoint(int key) {
+    public Integer getPoint(int key) {
         return points.get(key);
     }
 

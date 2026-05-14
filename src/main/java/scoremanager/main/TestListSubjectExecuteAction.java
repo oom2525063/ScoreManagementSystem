@@ -6,10 +6,10 @@ import java.util.List;
 
 import bean.Subject;
 import bean.Teacher;
-import bean.Test;
+import bean.TestListSubject;
 import dao.ClassNumDao;
 import dao.SubjectDao;
-import dao.TestDao;
+import dao.TestListSubjectDao;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -24,8 +24,7 @@ public class TestListSubjectExecuteAction extends Action {
         HttpSession session = req.getSession();
 
         // ログインユーザー取得
-        Teacher teacher =
-                (Teacher) session.getAttribute("user");
+        Teacher teacher = (Teacher) session.getAttribute("user");
 
         // パラメータ取得
         String f1 = req.getParameter("f1"); // 入学年度
@@ -42,12 +41,10 @@ public class TestListSubjectExecuteAction extends Action {
         }
 
         // クラス一覧
-        List<String> classNumList =
-                new ClassNumDao().filter(teacher.getSchool());
+        List<String> classNumList = new ClassNumDao().filter(teacher.getSchool());
 
         // 科目一覧
-        List<Subject> subjectList =
-                new SubjectDao().filter(teacher.getSchool());
+        List<Subject> subjectList = new SubjectDao().filter(teacher.getSchool());
 
         // 科目取得
         Subject subject = null;
@@ -62,30 +59,33 @@ public class TestListSubjectExecuteAction extends Action {
         }
 
         // 検索結果
-        List<Test> tests = new ArrayList<>();
+        List<TestListSubject> tests = new ArrayList<>();
 
-        // TestDao
-        TestDao dao = new TestDao();
+        TestListSubjectDao dao = new TestListSubjectDao();
 
-        // 回数（仮）
-        int num = 1;
+        System.out.println("subject is null: " + subject == null);
+        System.out.println("f1: " + f1);
 
         // filter実行
         if (subject != null &&
-            f1 != null &&
-            !f1.equals("0")) {
+                f1 != null &&
+                !f1.equals("0")) {
+
+            System.out.println("passsss");
 
             tests = dao.filter(
                     Integer.parseInt(f1),
                     f2,
                     subject,
-                    num,
                     teacher.getSchool());
+        } else {
+            System.out.println("nooooooo");
+
         }
 
         // JSPへ渡す
         req.setAttribute("test_set", tests);
-        
+
         req.setAttribute("f", "sj");
 
         req.setAttribute("f1", f1);
@@ -98,7 +98,7 @@ public class TestListSubjectExecuteAction extends Action {
 
         req.setAttribute("class_num_set", classNumList);
 
-        req.setAttribute("subjects", subjectList);
+        req.setAttribute("subject_set", subjectList);
 
         // 画面遷移
         req.getRequestDispatcher("test_list_student.jsp")

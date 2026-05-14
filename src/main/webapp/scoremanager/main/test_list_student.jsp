@@ -34,10 +34,6 @@
                     <%-- 科目情報 --%>
                     <form action="TestListSubjectExecute.action" method="get" class="d-flex align-items-end gap-4">
 
-                        <%-- 隠しフィールド パラメーター保持用 --%>
-                        <input type="hidden" name="f1" value="<c:out value="${f1}" />">
-                        <input type="hidden" name="f2" value="<c:out value="${f2}" />">
-                        <input type="hidden" name="f3" value="<c:out value="${f3}" />">
                         <p class="align-self-center pb-1 mb-0" style="min-width: 80px;">科目情報</p>
                         <div class="d-flex align-items-end gap-3">
 
@@ -100,8 +96,6 @@
                     <hr class="my-3">
                     <%-- 学生情報 --%>
                     <form action="TestListStudentExecute.action" method="get" class="d-flex align-items-end gap-4">
-                        <%-- 隠しフィールド パラメーター保持用 --%>
-                        <%-- <input type="hidden" name="f4" value="<c:out value="${f4}" />"> --%>
                         <p class="align-self-center pb-1 mb-0" style="min-width: 80px;">学生情報</p>
                         <div>
                             <label class="form-label" for="student-no-f4">学生番号</label>
@@ -125,68 +119,56 @@
                         <input type="hidden" name="f" value="st">
                     </form>
                 </div>
-
                 <%-- 検索結果表示 --%>
                 <c:choose>
-
+                    <%-- エラーメッセージ表示 --%>
+                    <c:when test="${not empty error}">
+                        <div><c:out value="${error}" /></div>
+                    </c:when>
                     <%-- 科目検索（f = "sj"） --%>
                     <c:when test="${f == 'sj'}">
-                    	<c:if test="${not empty error}">
-						    <div class="text-warning">
-						        ${error}
-						    </div>
-						</c:if>
-                        <%-- <c:if test="${empty test_set}">
-                            <p>成績情報が存在しませんでした</p>
-                        </c:if>--%>
+                        <c:if test="${empty test_set}">
+                            <div>成績情報が存在しませんでした</div>
+                        </c:if>
                         <c:if test="${not empty test_set}">
-                            <div>検索結果：${test_set.size()}件</div>
                             <table class="table table-hover mt-3">
                                 <tr>
+                                    <th>入学年度</th>
+                                    <th>クラス</th>
                                     <th>学生番号</th>
                                     <th>氏名</th>
-                                    <th>点数</th>
+                                    <th>１回</th>
+                                    <th>２回</th>
                                 </tr>
                                 <c:forEach var="t" items="${test_set}" varStatus="st">
                                     <tr>
-                                        <td>${t.student.no}</td>
-                                        <td>${t.student.name}</td>
-                                        <td>
-                                            <input
-                                            type="text"
-                                            name="point_${st.index}"
-                                            value="${t.point}"
-                                            style="width:80px;"
-                                            >
-                                            <input type="hidden" name="student_no_${st.index}" value="${t.student.no}">
-                                            <input type="hidden" name="subject_cd_${st.index}" value="${t.subject.cd}">
-                                            <input type="hidden" name="test_no_${st.index}" value="${t.no}">
-                                        </td>
+                                        <td>${t.getEntYear()}</td>
+                                        <td>${t.getClassNum()}</td>
+                                        <td>${t.getStudentNo()}</td>
+                                        <td>${t.getStudentName()}</td>
+                                        <td>${empty t.getPoint(1) ? '-' : t.getPoint(1)}</td>
+                                        <td>${empty t.getPoint(2) ? '-' : t.getPoint(2)}</td>
                                     </tr>
                                 </c:forEach>
                             </table>
                         </c:if>
                     </c:when>
-
                     <%-- 学生検索（f = "st"） --%>
                     <c:when test="${f == 'st'}">
-                    
-                    	<%-- エラーメッセージ表示 --%>
-					    <c:if test="${not empty error}">
-					        <div class="text-warning">
-					            ${error}
-					        </div>
-					    </c:if>
-
+                        <%-- エラーメッセージ表示 --%>
+                        <c:if test="${not empty error}">
+                            <div>
+                                <c:out value="${error}" />
+                            </div>
+                        </c:if>
+                        <%-- 氏名表示 --%>
+                        <div class="mb-2">
+                            氏名：${student.getName()}（${student.getNo()}）
+                        </div>
                         <c:if test="${empty test_set}">
-                            <p>成績情報が存在しませんでした</p>
+                            <div>成績情報が存在しませんでした</div>
                         </c:if>
                         <c:if test="${not empty test_set}">
-                            <div>検索結果：${test_set.size()}件</div>
-                            <%-- 氏名表示 --%>
-                            <div class="mb-2">
-                                氏名：${student.getName()}（${student.getNo()}）
-                            </div>
                             <table class="table table-hover mt-3">
                                 <tr>
                                     <th>科目</th>

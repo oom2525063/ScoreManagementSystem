@@ -57,45 +57,45 @@ public class TestListAction extends Action {
         TestDao testDao = new TestDao();
         List<Test> testList = new ArrayList<>();
 
-        // ▼ 科目検索（sj）
-        if ("sj".equals(f)) {
+        // // ▼ 科目検索（sj）
+        // if ("sj".equals(f)) {
 
-            // 全部そろっているときだけ TestDao.filter() を呼ぶ
-            if (isValid(f1) && isValid(f2) && isValid(f3) && isValid(f5)) {
+        //     // 全部そろっているときだけ TestDao.filter() を呼ぶ
+        //     if (isValid(f1) && isValid(f2) && isValid(f3) && isValid(f5)) {
 
-                int entYear = Integer.parseInt(f1);
-                String classNum = f2;
-                Subject subject = new Subject();
-                subject.setCd(f3);
-                subject.setSchool(school);
-                int testNo = Integer.parseInt(f5);
+        //         int entYear = Integer.parseInt(f1);
+        //         String classNum = f2;
+        //         Subject subject = new Subject();
+        //         subject.setCd(f3);
+        //         subject.setSchool(school);
+        //         int testNo = Integer.parseInt(f5);
 
-                testList = testDao.filter(entYear, classNum, subject, testNo, school);
-            }
+        //         testList = testDao.filter(entYear, classNum, subject, testNo, school);
+        //     }
 
-            request.setAttribute("test_set", testList);
-        }
+        //     request.setAttribute("test_set", testList);
+        // }
 
-        // ▼ 学生検索（st）
-        if ("st".equals(f)) {
+        // // ▼ 学生検索（st）
+        // if ("st".equals(f)) {
 
-            if (isValid(f4)) {
+        //     if (isValid(f4)) {
 
-                Student student = new StudentDao().get(f4);
+        //         Student student = new StudentDao().get(f4);
 
-                if (student != null) {
-                    // 全科目 × 全テスト回数（1〜5）を総当たり
-                    for (Subject sub : subjectList) {
-                        for (int no = 1; no <= 5; no++) {
-                            Test t = testDao.get(student, sub, school, no);
-                            if (t != null) testList.add(t);
-                        }
-                    }
-                }
-            }
+        //         if (student != null) {
+        //             // 全科目 × 全テスト回数（1〜5）を総当たり
+        //             for (Subject sub : subjectList) {
+        //                 for (int no = 1; no <= 5; no++) {
+        //                     Test t = testDao.get(student, sub, school, no);
+        //                     if (t != null) testList.add(t);
+        //                 }
+        //             }
+        //         }
+        //     }
 
-            request.setAttribute("test_set", testList);
-        }
+        //     request.setAttribute("test_set", testList);
+        // }
 
         // ▼ JSP へフォワード
         request.getRequestDispatcher("test_list_student.jsp").forward(request, response);

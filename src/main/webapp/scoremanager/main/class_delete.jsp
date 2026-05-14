@@ -12,7 +12,7 @@
             <h2 class="h3 mb-3 fw-norma bg-secondary bg-opacity-10 py-2">クラス情報削除</h2>
             <div id="wrap_box">
                 <p>「<c:out value="${class_.getClass_num()}" />(<c:out value="${class_.getSchool().getName()}" />)」を削除してもよろしいですか</p>
-                <a href="ClassDeleteExecute.action?cd=<c:out value='${class_.getClass_num()}' />" class="btn btn-danger">削除</a>
+                <a href="ClassDeleteExecute.action?class_num=<c:out value='${class_.getClass_num()}' />" class="btn btn-danger">削除</a>
                 <br>
                 <br>
                 <br>

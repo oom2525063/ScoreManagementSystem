@@ -10,13 +10,13 @@
 
 	<c:param name="content">
 		<div id="wrap_box">
-			<h2 class="h3 mb-3 fw-norma bg-secondary bg-opacity-10 py-2">クラス情報削除</h2>
+			<h2 class="h3 mb-3 fw-norma bg-secondary bg-opacity-10 py-2">クラス情報変更</h2>
 			<div id="wrap_box">
-				<p class="text-center" style="background-color:#8cc3a9">削除が完了しました</p>
+				<p class="text-center" style="background-color:#8cc3a9">変更が完了しました</p>
 				<br>
 				<br>
 				<br>
-				<a href="ClassList.action">戻る</a>
+				<a href="ClassList.action">クラス一覧</a>
 			</div>
 		</div>
 	</c:param>
