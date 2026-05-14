@@ -29,15 +29,17 @@ public class SubjectUpdateAction extends Action {
         // 科目取得
         Subject subject = dao.get(cd, school);
 
-        // TODO: 科目が存在しなかった(==null)場合はSubjectList.actionにリダイレクトして戻す
+        // 科目が存在しない場合
+        if (subject == null) {
+            res.sendRedirect("SubjectList.action");
+            return;
+        }
 
         // JSPへ渡す
         req.setAttribute("subject", subject);
 
         // 更新画面へ
-        req.getRequestDispatcher(
-                "subject_update.jsp") // TODO: ファイル作成
+        req.getRequestDispatcher("subject_update.jsp")
                 .forward(req, res);
     }
-
 }

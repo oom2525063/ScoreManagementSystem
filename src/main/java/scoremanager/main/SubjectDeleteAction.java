@@ -1,5 +1,3 @@
-// SubjectDeleteAction.java
-
 package scoremanager.main;
 
 import java.io.IOException;
@@ -14,11 +12,15 @@ import tool.Action;
 
 public class SubjectDeleteAction extends Action {
 
-    public void execute(HttpServletRequest req, HttpServletResponse res)
+    public void execute(
+            HttpServletRequest req,
+            HttpServletResponse res)
             throws Exception, IOException {
 
         // ログイン情報取得
-        Teacher teacher = (Teacher) req.getSession().getAttribute("user");
+        Teacher teacher =
+            (Teacher) req.getSession()
+            .getAttribute("user");
 
         // 学校情報取得
         School school = teacher.getSchool();
@@ -30,16 +32,25 @@ public class SubjectDeleteAction extends Action {
         SubjectDao dao = new SubjectDao();
 
         // 科目情報取得
-        Subject subject = dao.get(cd, school);
+        Subject subject =
+            dao.get(cd, school);
 
-        // TODO: subjectがない(==null)場合はSubjectList.actionにリダイレクト
+        // 科目が存在しない場合
+        if (subject == null) {
+
+            req.getRequestDispatcher(
+                "/scoremanager/main/subject_list.jsp"
+            ).forward(req, res);
+
+            return;
+        }
 
         // リクエストへ保存
         req.setAttribute("subject", subject);
 
-        // 削除確認画面へ遷移
-        req.getRequestDispatcher("subject_delete.jsp")
-                .forward(req, res);
+        // 削除確認画面へ
+        req.getRequestDispatcher(
+            "/scoremanager/main/subject_delete.jsp"
+        ).forward(req, res);
     }
-
 }

@@ -23,7 +23,6 @@ public class SubjectUpdateExecuteAction extends Action {
 
         // パラメータ取得
         String cd = req.getParameter("cd");
-
         String name = req.getParameter("name");
 
         // Bean
@@ -37,11 +36,15 @@ public class SubjectUpdateExecuteAction extends Action {
         SubjectDao dao = new SubjectDao();
 
         // 更新
-        dao.save(subject);
+        boolean result = dao.save(subject);
 
-        // 完了後一覧へ
-        res.sendRedirect("SubjectList.action");
-        // TODO: 完了後はSubjectUpdateDone.actionに遷移 (要ファイル作成)
+        // 更新失敗
+        if (!result) {
+            res.sendRedirect("error.jsp");
+            return;
+        }
+
+        // 完了画面へ
+        res.sendRedirect("SubjectUpdateDone.action");
     }
-
 }
