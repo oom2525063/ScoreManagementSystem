@@ -1,6 +1,5 @@
 <%-- クラス管理JSP --%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <c:import url="/common/base.jsp">
@@ -25,9 +24,9 @@ pageEncoding="UTF-8" %>
             <div class="text-end mb-3">
                 <a href="ClassCreate.action">新規登録</a>
             </div>
-            <div>名前：<c:out value="${teacher.getName()}" /><hr/></div>
+            <div>教員：<c:out value="${teacher.getName()}" /> (<c:out value="${teacher.getSchool().getName()}" />)<hr/></div>
             <%-- <table class="table table-hover"> --%>
-            <table id="studentTable" class="display custom-table">
+            <table id="classTable" class="display custom-table">
                 <thead>
                     <th>学校名</th>
                     <th>クラス番号</th>
@@ -40,7 +39,11 @@ pageEncoding="UTF-8" %>
                             <td><c:out value="${c.getClass_num()}" /></td>
                             <td>
                                 <c:if test="${teacher.getSchool().getCd() == c.getSchool().getCd()}">
-                                    <a href="ClassDelete.action?cd=<c:out value='${c.getClass_num()}' />">
+                                    <a href="ClassUpdate.action?class_num=<c:out value='${c.getClass_num()}' />">
+                                        変更
+                                    </a>
+                                    ・
+                                    <a href="ClassDelete.action?class_num=<c:out value='${c.getClass_num()}' />">
                                         削除
                                     </a>
                                 </c:if>
@@ -54,18 +57,16 @@ pageEncoding="UTF-8" %>
         <script>
             <%-- テーブル拡張のセットアップ --%>
             $(document).ready(function() {
-                $("#studentTable").DataTable({
+                $("#classTable").DataTable({
+                    <%-- 表示位置指定 --%>
                     layout: {
-                        topStart: "buttons",  <%-- 左上 - ボタン --%>
-                        // topEnd: "search",  <%-- 右上 - 検索 --%>
-                        //  bottomStart: "info",  <%-- 左下 - 情報 --%>
-                        // bottomEnd: "paging"  <%-- 右下 - ページネーション --%>
+                        topEnd: "buttons",  <%-- 左上 - ボタン --%>
                     },
-                    // searchPanes: false,  <%-- SearchPanesを無効化 --%>
-                    searching: false,  <%-- 検索 --%>
-                    // info: false,  <%-- ページネーション件数を表示 --%>
-                    // pageLength: 10,  <%-- 1ページごとの最大表示件数 --%>
-                    // lengthChange: false,  <%-- 件数切り替えを非表示 --%>
+                    <%-- 不要な表示を削除 --%>
+                    info: false,
+                    pageLength: false,
+                    paging: false,
+                    lengthChange: false,
                     <%-- ボタンのカスタマイズ --%>
                     buttons: [
                     {
@@ -98,7 +99,14 @@ pageEncoding="UTF-8" %>
                         }
                     }
                     ],
-                    columnDefs: [],
+                    columnDefs: [
+                    <%-- サイズ調整 --%>
+                    {
+                        "targets": -1,
+                        "width": "256px",
+                        "className": "dt-center"
+                    }
+                    ],
                 });
             });
         </script>
