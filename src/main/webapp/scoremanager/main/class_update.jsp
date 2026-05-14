@@ -20,8 +20,9 @@
                 </div>
                 <!-- 変更前のクラス番号 -->
                 <div class="mb-4">
-                    <label class="form-label">変更前のクラス番号</label><br>
-                    <input class="border border-0 ps-3" type="text" id="old_class_num" value="<c:out value='${class_.getClass_num()}' />" name="old_class_num" readonly />
+                    <label class="form-label">変更前のクラス番号</label>
+                    <input type="hidden" name="old_class_num" value="<c:out value='${class_.getClass_num()}' />" />
+                    <p><c:out value="${class_.getClass_num()}" /></p>
                 </div>
                 <!-- クラス番号 -->
                 <div class="mb-4">
