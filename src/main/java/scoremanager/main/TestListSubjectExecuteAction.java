@@ -41,10 +41,12 @@ public class TestListSubjectExecuteAction extends Action {
         }
 
         // クラス一覧
-        List<String> classNumList = new ClassNumDao().filter(teacher.getSchool());
+        List<String> classNumList =
+                new ClassNumDao().filter(teacher.getSchool());
 
         // 科目一覧
-        List<Subject> subjectList = new SubjectDao().filter(teacher.getSchool());
+        List<Subject> subjectList =
+                new SubjectDao().filter(teacher.getSchool());
 
         // 科目取得
         Subject subject = null;
@@ -63,13 +65,19 @@ public class TestListSubjectExecuteAction extends Action {
 
         TestListSubjectDao dao = new TestListSubjectDao();
 
-        System.out.println("subject is null: " + subject == null);
+        System.out.println("subject is null: " + (subject == null));
         System.out.println("f1: " + f1);
+        System.out.println("f2: " + f2);
+        System.out.println("f3: " + f3);
 
         // filter実行
         if (subject != null &&
                 f1 != null &&
-                !f1.equals("0")) {
+                !f1.equals("0") &&
+                f2 != null &&
+                !f2.equals("0") &&
+                f3 != null &&
+                !f3.equals("0")) {
 
             System.out.println("passsss");
 
@@ -78,9 +86,15 @@ public class TestListSubjectExecuteAction extends Action {
                     f2,
                     subject,
                     teacher.getSchool());
+
         } else {
+
             System.out.println("nooooooo");
 
+            // エラーメッセージ設定
+            req.setAttribute(
+                    "error",
+                    "入学年度とクラスと科目を選択してください。");
         }
 
         // JSPへ渡す
