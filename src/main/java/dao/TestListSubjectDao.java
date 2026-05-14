@@ -15,11 +15,11 @@ import bean.TestListSubject;
 public class TestListSubjectDao extends Dao{
 	
 	public String baseSql = "SELECT\n"
-			+ "    ENT_YEAR, STUDENT.NO, STUDENT.NAME, STUDENT.CLASS_NUM, TEST.NO AS T_NO TEST.POINT\n"
+			+ "    ENT_YEAR, STUDENT.NO, STUDENT.NAME, STUDENT.CLASS_NUM, TEST.NO AS T_NO, TEST.POINT\n"
 			+ "FROM\n"
 			+ "    STUDENT LEFT JOIN TEST ON TEST.STUDENT_NO = STUDENT.NO\n"
 			+ "WHERE\n"
-			+ "    STUDENT.ENT_YEAR = ? AND STUDENT.CLASS_NUM = ? AND STUDENT.SCHOOL_CD = ?"
+			+ "    STUDENT.ENT_YEAR = ? AND STUDENT.CLASS_NUM = ? AND STUDENT.SCHOOL_CD = ?\n"
 			+ "ORDER BY\n"
 			+ "  STUDENT.NO ASC, TEST.NO ASC;";
 		
@@ -30,7 +30,7 @@ public class TestListSubjectDao extends Dao{
  
         while (rSet.next()) { // データ取り出し
  
-            String studentNo = rSet.getString("STUDENT_NO");
+            String studentNo = rSet.getString("NO");
  
             TestListSubject bean; // 追加するobj
  
@@ -53,7 +53,7 @@ public class TestListSubjectDao extends Dao{
             }
  
             // テスト回数と得点をオブジェクトに追加
-            int testNo = rSet.getInt("TEST_NO");
+            int testNo = rSet.getInt("T_NO");
             if (!rSet.wasNull()) {
                 int point = rSet.getInt("POINT");
                 bean.putPoint(testNo, point);
