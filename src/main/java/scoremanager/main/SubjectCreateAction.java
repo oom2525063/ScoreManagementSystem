@@ -101,7 +101,7 @@ public class SubjectCreateAction extends Action {
 				);
 
 				// DB登録
-				dao.save(subject);
+				dao.insert(subject);
 
 				// 完了画面へ
 				request.getRequestDispatcher(

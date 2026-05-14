@@ -25,6 +25,31 @@ public class SubjectUpdateExecuteAction extends Action {
         String cd = req.getParameter("cd");
         String name = req.getParameter("name");
 
+        // DAO
+        SubjectDao dao = new SubjectDao();
+
+        // 科目存在確認
+        Subject old = dao.get(cd, school);
+
+        // 存在しない場合
+        if (old == null) {
+
+            req.setAttribute("error", "科目が存在していません");
+
+            // 入力値保持
+            Subject subject = new Subject();
+            subject.setCd(cd);
+            subject.setName(name);
+
+            req.setAttribute("subject", subject);
+
+            req.getRequestDispatcher(
+                    "/scoremanager/main/subject_update.jsp")
+                    .forward(req, res);
+
+            return;
+        }
+
         // Bean
         Subject subject = new Subject();
 
@@ -32,11 +57,8 @@ public class SubjectUpdateExecuteAction extends Action {
         subject.setName(name);
         subject.setSchool(school);
 
-        // DAO
-        SubjectDao dao = new SubjectDao();
-
         // 更新
-        boolean result = dao.save(subject);
+        boolean result = dao.update(subject);
 
         // 更新失敗
         if (!result) {
@@ -45,6 +67,8 @@ public class SubjectUpdateExecuteAction extends Action {
         }
 
         // 完了画面へ
-        res.sendRedirect("SubjectUpdateDone.action");
+        req.getRequestDispatcher(
+                "/scoremanager/main/subject_update_done.jsp")
+                .forward(req, res);
     }
 }

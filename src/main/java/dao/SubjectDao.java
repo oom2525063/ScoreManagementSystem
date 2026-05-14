@@ -20,7 +20,8 @@ public class SubjectDao extends Dao {
 
 		Connection con = getConnection();
 
-		String sql = "select * from subject where cd = ? and school_cd = ?";
+		String sql =
+			"select * from subject where cd = ? and school_cd = ?";
 
 		PreparedStatement st = con.prepareStatement(sql);
 
@@ -53,7 +54,8 @@ public class SubjectDao extends Dao {
 
 		Connection con = getConnection();
 
-		String sql = "select * from subject where school_cd = ? order by cd";
+		String sql =
+			"select * from subject where school_cd = ? order by cd";
 
 		PreparedStatement st = con.prepareStatement(sql);
 
@@ -81,11 +83,12 @@ public class SubjectDao extends Dao {
 	/**
 	 * 科目登録
 	 */
-	public boolean save(Subject subject) throws Exception {
+	public boolean insert(Subject subject) throws Exception {
 
 		Connection con = getConnection();
 
-		String sql = "insert into subject(cd, name, school_cd) values(?, ?, ?)";
+		String sql =
+			"insert into subject(cd, name, school_cd) values(?, ?, ?)";
 
 		PreparedStatement st = con.prepareStatement(sql);
 
@@ -98,11 +101,31 @@ public class SubjectDao extends Dao {
 		st.close();
 		con.close();
 
-		if (count > 0) {
-			return true;
-		}
+		return count > 0;
+	}
 
-		return false;
+	/**
+	 * 科目変更
+	 */
+	public boolean update(Subject subject) throws Exception {
+
+		Connection con = getConnection();
+
+		String sql =
+			"update subject set name=? where cd=? and school_cd=?";
+
+		PreparedStatement st = con.prepareStatement(sql);
+
+		st.setString(1, subject.getName());
+		st.setString(2, subject.getCd());
+		st.setString(3, subject.getSchool().getCd());
+
+		int count = st.executeUpdate();
+
+		st.close();
+		con.close();
+
+		return count > 0;
 	}
 
 	/**
@@ -112,7 +135,8 @@ public class SubjectDao extends Dao {
 
 		Connection con = getConnection();
 
-		String sql = "delete from subject where cd = ? and school_cd = ?";
+		String sql =
+			"delete from subject where cd = ? and school_cd = ?";
 
 		PreparedStatement st = con.prepareStatement(sql);
 
@@ -124,10 +148,6 @@ public class SubjectDao extends Dao {
 		st.close();
 		con.close();
 
-		if (count > 0) {
-			return true;
-		}
-
-		return false;
+		return count > 0;
 	}
 }
