@@ -28,10 +28,11 @@
                         </div>
                     </c:if>
                 </div>
-                <button type="submit" class="btn btn-secondary">登録して終了</button>
+                <button type="submit" class="btn btn-primary">登録</button>
             </form>
             <br>
             <a href="ClassList.action">戻る</a>
         </div>
     </c:param>
+
 </c:import>

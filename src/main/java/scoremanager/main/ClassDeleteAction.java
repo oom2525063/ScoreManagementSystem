@@ -19,12 +19,12 @@ public class ClassDeleteAction extends Action {
         Teacher teacher = (Teacher) session.getAttribute("user");
 
         // パラメーター取得
-        String cd = request.getParameter("cd");
+        String classNUm = request.getParameter("class_num");
 
         ClassNumDao classNumDao = new ClassNumDao();
 
         // クラスを取得 (学校照合)
-        ClassNum classNum = classNumDao.get(cd, teacher.getSchool());
+        ClassNum classNum = classNumDao.get(classNUm, teacher.getSchool());
 
         if (classNum == null) {
             // クラスが見つからなかった or 違う学校(権限不足)
