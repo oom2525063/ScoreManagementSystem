@@ -87,13 +87,16 @@
                         <%-- 項目識別用文字列 (sj: 科目検索) --%>
                         <input type="hidden" name="f" value="sj">
                     </form>
+
                     <%-- 科目検索エラーメッセージ表示 --%>
-                    <c:if test="${not empty errors.get('sj')}">
+                    <c:if test="${not empty error && f == 'sj'}">
                         <div class="mt-2 text-warning">
-                            入学年度とクラスと科目を選択してください。
+                            <c:out value="${error}" />
                         </div>
                     </c:if>
+
                     <hr class="my-3">
+
                     <%-- 学生情報 --%>
                     <form action="TestListStudentExecute.action" method="get" class="d-flex align-items-end gap-4">
                         <p class="align-self-center pb-1 mb-0" style="min-width: 80px;">学生情報</p>
@@ -111,25 +114,31 @@
                             style="min-width: 250px;"
                             >
                         </div>
+
                         <%-- 学生側検索ボタン --%>
                         <button class="btn btn-secondary ms-3" id="search-st-button">
                             検索
                         </button>
+
                         <%-- 識別用文字列 (st: 学生検索) --%>
                         <input type="hidden" name="f" value="st">
                     </form>
                 </div>
+
                 <%-- 検索結果表示 --%>
                 <c:choose>
+
                     <%-- エラーメッセージ表示 --%>
-                    <c:when test="${not empty error}">
+                    <c:when test="${not empty error && f == 'st'}">
                         <div><c:out value="${error}" /></div>
                     </c:when>
+
                     <%-- 科目検索（f = "sj"） --%>
                     <c:when test="${f == 'sj'}">
                         <c:if test="${empty test_set}">
                             <div>成績情報が存在しませんでした</div>
                         </c:if>
+
                         <c:if test="${not empty test_set}">
                             <table class="table table-hover mt-3">
                                 <tr>
@@ -140,6 +149,7 @@
                                     <th>１回</th>
                                     <th>２回</th>
                                 </tr>
+
                                 <c:forEach var="t" items="${test_set}" varStatus="st">
                                     <tr>
                                         <td>${t.getEntYear()}</td>
@@ -153,21 +163,26 @@
                             </table>
                         </c:if>
                     </c:when>
+
                     <%-- 学生検索（f = "st"） --%>
                     <c:when test="${f == 'st'}">
+
                         <%-- エラーメッセージ表示 --%>
                         <c:if test="${not empty error}">
                             <div>
                                 <c:out value="${error}" />
                             </div>
                         </c:if>
+
                         <%-- 氏名表示 --%>
                         <div class="mb-2">
                             氏名：${student.getName()}（${student.getNo()}）
                         </div>
+
                         <c:if test="${empty test_set}">
                             <div>成績情報が存在しませんでした</div>
                         </c:if>
+
                         <c:if test="${not empty test_set}">
                             <table class="table table-hover mt-3">
                                 <tr>
@@ -175,6 +190,7 @@
                                     <th>回数</th>
                                     <th>点数</th>
                                 </tr>
+
                                 <c:forEach var="t" items="${test_set}">
                                     <tr>
                                         <td>${t.getSubjectName()}</td>
@@ -185,6 +201,7 @@
                             </table>
                         </c:if>
                     </c:when>
+
                     <c:otherwise>
                         <p class="mt-3 text-info">
                             科目情報を選択または学生情報を入力して検索ボタンをクリックしてください
@@ -193,5 +210,4 @@
                 </c:choose>
             </section>
         </c:param>
-
-    </c:import>
+</c:import>
