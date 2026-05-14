@@ -4,34 +4,38 @@ package scoremanager.main;
 
 import java.io.IOException;
 
-import dao.SubjectDAO;
-import jakarta.servlet.ServletException;
+import bean.School;
+import bean.Subject;
+import bean.Teacher;
+import dao.SubjectDao;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import tool.Action;
 
 public class SubjectDeleteExecuteAction extends Action {
 
-    @Override
     public void execute(HttpServletRequest req, HttpServletResponse res)
-            throws ServletException, IOException {
+            throws Exception, IOException {
 
-        try {
+        // ログイン情報
+        Teacher teacher = (Teacher) req.getSession()
+                .getAttribute("user");
 
-            // 科目コード取得
-            String cd = req.getParameter("cd");
+        // 学校取得
+        School school = teacher.getSchool();
 
-            // DAO生成
-            SubjectDAO dao = new SubjectDAO();
+        // 科目コード取得
+        String cd = req.getParameter("cd");
 
-            // 削除実行
-            dao.delete(cd);
+        // DAO生成
+        SubjectDao dao = new SubjectDao();
+        Subject subject = dao.get(cd, school);
 
-            // 一覧画面へ戻る
-            res.sendRedirect("SubjectList.action");
+        // 削除実行
+        dao.delete(subject); // TODO: 失敗(==false)でerror.jspにリダイレクト
 
-        } catch (Exception e) {
-            throw new ServletException(e);
-        }
+        // 一覧画面へ戻る
+        res.sendRedirect("SubjectList.action"); // TODO: SubjectDeleteDone.actionにリダイレクト
     }
+
 }

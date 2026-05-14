@@ -4,39 +4,42 @@ package scoremanager.main;
 
 import java.io.IOException;
 
+import bean.School;
 import bean.Subject;
-import dao.SubjectDAO;
-import jakarta.servlet.ServletException;
+import bean.Teacher;
+import dao.SubjectDao;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import tool.Action;
 
 public class SubjectDeleteAction extends Action {
 
-    @Override
     public void execute(HttpServletRequest req, HttpServletResponse res)
-            throws ServletException, IOException {
+            throws Exception, IOException {
 
-        try {
+        // ログイン情報取得
+        Teacher teacher = (Teacher) req.getSession().getAttribute("user");
 
-            // 科目コード取得
-            String cd = req.getParameter("cd");
+        // 学校情報取得
+        School school = teacher.getSchool();
 
-            // DAO生成
-            SubjectDAO dao = new SubjectDAO();
+        // 科目コード取得
+        String cd = req.getParameter("cd");
 
-            // 科目情報取得
-            Subject subject = dao.get(cd);
+        // DAO生成
+        SubjectDao dao = new SubjectDao();
 
-            // リクエストへ保存
-            req.setAttribute("subject", subject);
+        // 科目情報取得
+        Subject subject = dao.get(cd, school);
 
-            // 削除確認画面へ遷移
-            req.getRequestDispatcher("subject_delete.jsp")
-                    .forward(req, res);
+        // TODO: subjectがない(==null)場合はSubjectList.actionにリダイレクト
 
-        } catch (Exception e) {
-            throw new ServletException(e);
-        }
+        // リクエストへ保存
+        req.setAttribute("subject", subject);
+
+        // 削除確認画面へ遷移
+        req.getRequestDispatcher("subject_delete.jsp")
+                .forward(req, res);
     }
+
 }

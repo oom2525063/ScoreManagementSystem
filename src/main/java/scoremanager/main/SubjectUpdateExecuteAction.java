@@ -1,38 +1,30 @@
 package scoremanager.main;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import bean.School;
 import bean.Subject;
 import bean.Teacher;
 import dao.SubjectDao;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import tool.Action;
 
 public class SubjectUpdateExecuteAction extends Action {
 
     public void execute(HttpServletRequest req,
-                        HttpServletResponse res)
+            HttpServletResponse res)
             throws Exception {
 
-        // 文字コード
-        req.setCharacterEncoding("UTF-8");
-
         // ログイン情報
-        Teacher teacher =
-            (Teacher)req.getSession()
-                        .getAttribute("user");
+        Teacher teacher = (Teacher) req.getSession()
+                .getAttribute("user");
 
         // 学校取得
-        School school =
-            teacher.getSchool();
+        School school = teacher.getSchool();
 
         // パラメータ取得
-        String cd =
-            req.getParameter("cd");
+        String cd = req.getParameter("cd");
 
-        String name =
-            req.getParameter("name");
+        String name = req.getParameter("name");
 
         // Bean
         Subject subject = new Subject();
@@ -45,16 +37,11 @@ public class SubjectUpdateExecuteAction extends Action {
         SubjectDao dao = new SubjectDao();
 
         // 更新
-        dao.update(subject);
+        dao.save(subject);
 
         // 完了後一覧へ
         res.sendRedirect("SubjectList.action");
+        // TODO: 完了後はSubjectUpdateDone.actionに遷移 (要ファイル作成)
     }
 
-	@Override
-	public void execute(jakarta.servlet.http.HttpServletRequest req, jakarta.servlet.http.HttpServletResponse res)
-			throws Exception {
-		// TODO 自動生成されたメソッド・スタブ
-		
-	}
 }
