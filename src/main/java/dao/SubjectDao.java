@@ -81,9 +81,9 @@ public class SubjectDao extends Dao {
 	}
 
 	/**
-	 * 科目登録
+	 * 科目登録（INSERT）
 	 */
-	public boolean insert(Subject subject) throws Exception {
+	private boolean insert(Subject subject) throws Exception {
 
 		Connection con = getConnection();
 
@@ -105,9 +105,9 @@ public class SubjectDao extends Dao {
 	}
 
 	/**
-	 * 科目変更
+	 * 科目変更（UPDATE）
 	 */
-	public boolean update(Subject subject) throws Exception {
+	private boolean update(Subject subject) throws Exception {
 
 		Connection con = getConnection();
 
@@ -126,6 +126,20 @@ public class SubjectDao extends Dao {
 		con.close();
 
 		return count > 0;
+	}
+
+	/**
+	 * 追加：登録 or 更新（UPSERT）
+	 */
+	public boolean save(Subject subject) throws Exception {
+
+		Subject exist = this.get(subject.getCd(), subject.getSchool());
+
+		if (exist == null) {
+			return this.insert(subject);
+		} else {
+			return this.update(subject);
+		}
 	}
 
 	/**
@@ -150,4 +164,5 @@ public class SubjectDao extends Dao {
 
 		return count > 0;
 	}
+
 }
