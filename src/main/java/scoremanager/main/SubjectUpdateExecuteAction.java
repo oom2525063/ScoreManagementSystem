@@ -58,7 +58,7 @@ public class SubjectUpdateExecuteAction extends Action {
         subject.setSchool(school);
 
         // 更新
-        boolean result = dao.update(subject);
+        boolean result = dao.save(subject);
 
         // 更新失敗
         if (!result) {

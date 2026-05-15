@@ -101,7 +101,7 @@ public class SubjectCreateAction extends Action {
 				);
 
 				// DB登録
-				dao.insert(subject);
+				dao.save(subject);
 
 				// 完了画面へ
 				request.getRequestDispatcher(
@@ -112,7 +112,7 @@ public class SubjectCreateAction extends Action {
 			}
 		}
 
-		// 登録画面表示
+		// エラーあり → 登録画面表示
 		request.getRequestDispatcher(
 			"/scoremanager/main/subject_create.jsp"
 		).forward(request, response);
