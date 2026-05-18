@@ -59,7 +59,13 @@ pageEncoding="UTF-8" %>
                         </div>
                     </div>
                 </form>
-                <c:choose>
+                <%-- 未選択時メッセージ --%>
+	            <c:if test="${not empty message}">
+	                <p class="text-warning mx-3">
+	                    <c:out value="${message}" />
+	                </p>
+	            </c:if>
+	            <c:choose>
                     <%-- データ表示 --%>
                     <c:when test="${test_set.size() > 0}">
                         <form method="post" action="TestRegistExecute.action">
