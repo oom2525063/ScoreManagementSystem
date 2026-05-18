@@ -107,13 +107,19 @@ public class TestRegistAction extends Action {
         request.setAttribute("subject", subject); // 検索時の名前表示用obj
         
         //未選択時メッセージ
-        if ((entYearStr == null || entYearStr.equals("0")) ||
-        	    (classNum == null || classNum.equals("0")) ||
-        	    (subjectCd == null || subjectCd.equals("0")) ||
-        	    (numStr == null || numStr.equals("0"))) {
-        	    request.setAttribute("message",
-        	        "入学年度とクラスと科目と回数を選択してください");
-        	}
+        if (request.getParameter("f1") != null) {
+
+            if ((entYearStr == null || entYearStr.equals("0")) ||
+                (classNum == null || classNum.equals("0")) ||
+                (subjectCd == null || subjectCd.equals("0")) ||
+                (numStr == null || numStr.equals("0"))) {
+
+                request.setAttribute(
+                    "message",
+                    "入学年度とクラスと科目と回数を選択してください"
+                );
+            }
+        }
 
         // JSPにフォワード
         request.getRequestDispatcher("test_regist.jsp").forward(request, response);
