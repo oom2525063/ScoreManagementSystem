@@ -26,7 +26,7 @@ public class SubjectDeleteExecuteAction extends Action {
         School school = teacher.getSchool();
 
         // 科目コード取得
-        String cd = req.getParameter("cd");
+        String cd = req.getParameter("subject_cd");
 
         // DAO生成
         SubjectDao dao = new SubjectDao();

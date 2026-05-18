@@ -21,16 +21,13 @@
 				科目情報削除
 			</h2>
 
-			<p>
-				「${subject.name}[${subject.cd}]」を削除してもよろしいですか
-			</p>
+			<p>「<c:out value="${subject.name}" />(<c:out value="${subject.cd}" />)」を削除してもよろしいですか</p>
 
 			<form action="SubjectDeleteExecute.action"
 				method="post">
 
-				<input type="hidden"
-					name="cd"
-					value="${subject.cd}">
+				<input type="hidden" name="subject_cd" value="<c:out value='${subject.cd}' />">
+				<input type="hidden" name="subject_name" value="<c:out value='${subject.name}' />">
 
 				<button type="submit"
 					class="btn btn-danger">
