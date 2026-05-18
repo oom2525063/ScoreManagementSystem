@@ -19,9 +19,11 @@ public class ClassUpdateExecuteAction extends Action {
 
         // Teacher(ユーザー)取得
         Teacher teacher = (Teacher) session.getAttribute("user");
+        request.setAttribute("teacher", teacher);
 
         // 終了前の属性保存
         request.setAttribute("class_num", request.getParameter("class_num"));
+        request.setAttribute("old_class_num", request.getParameter("old_class_num"));
 
         HashMap<String, String> errorList = new HashMap<>();
 
@@ -38,8 +40,17 @@ public class ClassUpdateExecuteAction extends Action {
             classNumError = "クラス番号は5文字以内で入力してください";
         }
 
-        // エラーがあれば修正
+        // 条件チェック未通過 → エラー表示を出して更新に戻す
         if (classNumError != null) {
+            // 表示用
+            ClassNum oldClassNum = new ClassNumDao().get(oldClassNumParam, teacher.getSchool());
+            if (oldClassNum == null) {
+                // クラスが見つからなかった or 違う学校(権限不足)
+                response.sendRedirect(request.getContextPath() + "/error.jsp"); // エラーページにリダイレクトして終了
+                return;
+            }
+            request.setAttribute("class_", oldClassNum);
+
             errorList.put("class_num", classNumError);
             request.setAttribute("error_set", errorList);
             request.getRequestDispatcher("class_update.jsp").forward(request, response);

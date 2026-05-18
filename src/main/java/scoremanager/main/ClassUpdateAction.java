@@ -21,6 +21,10 @@ public class ClassUpdateAction extends Action {
 
         // パラメーター取得
         String classNumPram = request.getParameter("class_num");
+        request.setAttribute("class_num", classNumPram);
+
+        String oldClassNumPram = request.getParameter("old_class_num");
+        request.setAttribute("old_class_num", oldClassNumPram);
 
         // クラスを取得 (学校照合)
         ClassNum classNum = new ClassNumDao().get(classNumPram, teacher.getSchool());
