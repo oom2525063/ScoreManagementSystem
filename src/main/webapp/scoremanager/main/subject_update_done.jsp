@@ -30,16 +30,12 @@
 
 			</p>
 
-			<br><br>
+			<br><br><br><br>
 
-			<a href="SubjectList.action">
-				戻る
-			</a>
-
-			<a style="margin-left:50px;"
+			<a style="margin-left:10px;"
 				href="SubjectList.action">
 
-				科目一覧
+			科目一覧
 
 			</a>
 
