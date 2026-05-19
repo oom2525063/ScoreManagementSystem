@@ -82,6 +82,8 @@
 
                         <%-- 項目識別用文字列 (sj: 科目検索) --%>
                         <input type="hidden" name="f" value="sj">
+                        <%-- 学生検索入力を保持するための隠しフィールド --%>
+                        <%-- <input type="hidden" name="f4" value="<c:out value='${f4}' />"> --%>
                     </form>
 
                     <%-- 科目検索エラーメッセージ表示 --%>
@@ -104,7 +106,7 @@
                             id="student-no-f4"
                             name="f4"
                             required
-                            value="<c:out value="${f4}" />"
+                            value="<c:out value='${f4}' />"
                             placeholder="学生番号を入力してください"
                             maxlength="10"
                             style="min-width: 250px;"
@@ -116,6 +118,10 @@
 
                         <%-- 識別用文字列 (st: 学生検索) --%>
                         <input type="hidden" name="f" value="st">
+                        <%-- 科目検索入力を保持するための隠しフィールド --%>
+                        <%-- <input type="hidden" name="f1" value="<c:out value='${f1}' />">
+                        <input type="hidden" name="f2" value="<c:out value='${f2}' />">
+                        <input type="hidden" name="f3" value="<c:out value='${f3}' />"> --%>
                     </form>
                 </div>
 

@@ -100,6 +100,10 @@ public class TestListSubjectExecuteAction extends Action {
 
         req.setAttribute("f3", f3);
 
+        // if (req.getAttribute("f4") == null) {
+        //     req.setAttribute("f4", req.getParameter("f4"));
+        // }
+
         req.setAttribute("ent_year_set", entYearList);
 
         req.setAttribute("class_num_set", classNumList);

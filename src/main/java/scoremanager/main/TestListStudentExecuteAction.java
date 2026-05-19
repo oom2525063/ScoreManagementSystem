@@ -76,6 +76,19 @@ public class TestListStudentExecuteAction extends Action {
         // JSPへ渡す
         req.setAttribute("test_set", testList);
 
+        // ▼ パラメータ取得
+
+        // パラメーターがリクエスト属性になければパラメーターで更新
+        // if (req.getAttribute("f1") == null) {
+        //         req.setAttribute("f1", req.getParameter("f1"));
+        // }
+        // if (req.getAttribute("f2") == null) {
+        //         req.setAttribute("f2", req.getParameter("f2"));
+        // }
+        // if (req.getAttribute("f3") == null) {
+        //         req.setAttribute("f3", req.getParameter("f3"));
+        // }
+
         req.setAttribute("f4", f4);
 
         req.setAttribute("ent_year_set", entYearList);
