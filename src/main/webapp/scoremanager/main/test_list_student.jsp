@@ -122,15 +122,23 @@
                 <%-- 検索結果表示 --%>
                 <c:choose>
 
-                    <%-- エラーメッセージ表示 --%>
+                    <%-- 分岐：学生側かつエラーがある場合 → エラー表示 --%>
                     <c:when test="${not empty error && f == 'st'}">
                         <div><c:out value="${error}" /></div>
                     </c:when>
 
                     <%-- 科目検索（f = "sj"） --%>
                     <c:when test="${f == 'sj'}">
-                        <c:if test="${empty test_set}">
-                            <div>成績情報が存在しませんでした</div>
+                        <%-- エラーがない場合 --%>
+                        <c:if test="${empty error}">
+                            <%-- 科目表示 --%>
+                            <div>
+                                科目：<c:out value="${subject.getName()}" />
+                            </div>
+                            <%-- 科目がない場合 --%>
+                            <c:if test="${empty test_set}">
+                                <div>成績情報が存在しませんでした</div>
+                            </c:if>
                         </c:if>
 
                         <c:if test="${not empty test_set}">
@@ -161,15 +169,8 @@
                     <%-- 学生検索（f = "st"） --%>
                     <c:when test="${f == 'st'}">
 
-                        <%-- エラーメッセージ表示 --%>
-                        <c:if test="${not empty error}">
-                            <div>
-                                <c:out value="${error}" />
-                            </div>
-                        </c:if>
-
                         <%-- 氏名表示 --%>
-                        <div class="mb-2">
+                        <div>
                             氏名：${student.getName()}（${student.getNo()}）
                         </div>
 
