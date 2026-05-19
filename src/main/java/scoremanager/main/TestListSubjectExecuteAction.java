@@ -59,16 +59,12 @@ public class TestListSubjectExecuteAction extends Action {
                 break;
             }
         }
+        req.setAttribute("subject", subject);
 
         // 検索結果
         List<TestListSubject> tests = new ArrayList<>();
 
         TestListSubjectDao dao = new TestListSubjectDao();
-
-        System.out.println("subject is null: " + (subject == null));
-        System.out.println("f1: " + f1);
-        System.out.println("f2: " + f2);
-        System.out.println("f3: " + f3);
 
         // filter実行
         if (subject != null &&
@@ -79,8 +75,6 @@ public class TestListSubjectExecuteAction extends Action {
                 f3 != null &&
                 !f3.equals("0")) {
 
-            System.out.println("passsss");
-
             tests = dao.filter(
                     Integer.parseInt(f1),
                     f2,
@@ -88,8 +82,6 @@ public class TestListSubjectExecuteAction extends Action {
                     teacher.getSchool());
 
         } else {
-
-            System.out.println("nooooooo");
 
             // エラーメッセージ設定
             req.setAttribute(
