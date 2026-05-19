@@ -17,6 +17,7 @@ public class ClassDeleteAction extends Action {
 
         // Teacher(ユーザー)取得
         Teacher teacher = (Teacher) session.getAttribute("user");
+        request.setAttribute("teacher", teacher);
 
         // パラメーター取得
         String classNUm = request.getParameter("class_num");

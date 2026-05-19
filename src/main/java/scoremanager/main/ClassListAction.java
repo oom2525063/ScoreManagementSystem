@@ -21,6 +21,7 @@ public class ClassListAction extends Action {
 
         // Teacher(ユーザー)取得
         Teacher teacher = (Teacher) session.getAttribute("user");
+        request.setAttribute("teacher", teacher);
 
         School school = teacher.getSchool();
 
@@ -34,8 +35,6 @@ public class ClassListAction extends Action {
         }
 
         // リクエスト属性をセット
-
-        request.setAttribute("teacher", teacher); // 教師
         request.setAttribute("class_num_set", classNumList); // クラス番号
 
         request.getRequestDispatcher("class_list.jsp").forward(request, response);

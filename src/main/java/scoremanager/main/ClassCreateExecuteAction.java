@@ -21,15 +21,15 @@ public class ClassCreateExecuteAction extends Action {
         Teacher teacher = (Teacher) session.getAttribute("user");
         request.setAttribute("teacher", teacher); // 学校名表示用
 
-        // 終了前の属性保存
-        request.setAttribute("class_num", request.getParameter("class_num"));
 
         HashMap<String, String> errorList = new HashMap<>();
 
         // 入力値検証
 
         String classNumError = null;
+
         String classNum = request.getParameter("class_num");
+        request.setAttribute("class_num", classNum);
 
         if (classNum == null || classNum.isEmpty()) {
             classNumError = "クラス番号を入力してください";
@@ -37,7 +37,7 @@ public class ClassCreateExecuteAction extends Action {
             classNumError = "クラス番号は5文字以内で入力してください";
         }
 
-        // エラーがあれば修正
+        // エラーがあればエラーをセットして更新画面に戻す
         if (classNumError != null) {
             errorList.put("class_num", classNumError);
             request.setAttribute("error_set", errorList);
