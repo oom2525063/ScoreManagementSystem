@@ -70,7 +70,7 @@
                                     <option value="0">--------</option>
                                     <c:forEach var="subject" items="${subject_set}">
                                         <option value="<c:out value='${subject.cd}' />" <c:if test="${subject.cd == f3}">selected</c:if>>
-                                            ${subject.name}
+                                            <c:out value="${subject.name}" />
                                         </option>
                                     </c:forEach>
                                 </select>
@@ -155,9 +155,9 @@
                                 <c:forEach var="t" items="${test_set}" varStatus="st">
                                     <tr>
                                         <td>${t.getEntYear()}</td>
-                                        <td>${t.getClassNum()}</td>
-                                        <td>${t.getStudentNo()}</td>
-                                        <td>${t.getStudentName()}</td>
+                                        <td><c:out value="${t.getClassNum()}" /></td>
+                                        <td><c:out value="${t.getStudentNo()}" /></td>
+                                        <td><c:out value="${t.getStudentName()}" /></td>
                                         <td>${empty t.getPoint(1) ? '-' : t.getPoint(1)}</td>
                                         <td>${empty t.getPoint(2) ? '-' : t.getPoint(2)}</td>
                                     </tr>
@@ -171,7 +171,7 @@
 
                         <%-- 氏名表示 --%>
                         <div>
-                            氏名：${student.getName()}（${student.getNo()}）
+                            氏名：<c:out value="${student.getName()}" />（<c:out value="${student.getNo()}" />）
                         </div>
 
                         <c:if test="${empty test_set}">
@@ -188,15 +188,15 @@
 
                                 <c:forEach var="t" items="${test_set}">
                                     <tr>
-                                        <td>${t.getSubjectName()}</td>
-                                        <td>${t.getNum()}</td>
+                                        <td><c:out value="${t.getSubjectName()}" /></td>
+                                        <td><c:out value="${t.getNum()}" /></td>
                                         <td>${t.getPoint()}</td>
                                     </tr>
                                 </c:forEach>
                             </table>
                         </c:if>
                     </c:when>
-
+                    <%-- 機能フラグ未設定 --%>
                     <c:otherwise>
                         <p class="mt-3 text-info">
                             科目情報を選択または学生情報を入力して検索ボタンをクリックしてください
@@ -205,4 +205,5 @@
                 </c:choose>
             </section>
         </c:param>
+
     </c:import>
