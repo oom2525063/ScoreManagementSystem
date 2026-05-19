@@ -14,8 +14,8 @@ import bean.Test;
 
 public class TestDao extends Dao {
 
-    public String baseSql = "SELECT s.*, " // 学生テーブルの全カラム
-            + "t.CLASS_NUM, t.SUBJECT_CD, t.NO, t.POINT, " // テストテーブルの一部カラム
+    public String baseSql = "SELECT s.*, " // 学生テーブルの全カラムを展開
+            + "t.CLASS_NUM AS TEST_CLASS_NUM, t.SUBJECT_CD AS TEST_SUBJECT_CD, t.NO AS TEST_NO, t.POINT AS TEST_POINT, " // テストテーブルの一部カラム
             + "sub.NAME AS SUBJECT_NAME "
             + "FROM TEST AS t " // FROM
             + "JOIN STUDENT s ON t.STUDENT_NO = s.NO " // 学生JOIN
@@ -38,7 +38,7 @@ public class TestDao extends Dao {
 
             try (ResultSet rSet = statement.executeQuery()) {
                 if (rSet.next()) {
-                    test = postFilter(rSet, school);
+                    test = this.postFilter(rSet, subject, school, no);
                 }
 
                 return test;
@@ -50,23 +50,31 @@ public class TestDao extends Dao {
     }
 
     // ResultSetからTestを作成
-    private Test postFilter(ResultSet rSet, School school) throws SQLException, Exception {
+    private Test postFilter(ResultSet rSet, Subject subject, School school, int no) throws SQLException, Exception {
 
         Test test = new Test();
 
         Student student = StudentDao._studentCreateFromQueryResult(rSet);
         test.setStudent(student);
 
-        Subject subject = new Subject();
-        subject.setCd(rSet.getString("SUBJECT_CD"));
-        subject.setName(rSet.getString("SUBJECT_NAME"));
-        subject.setSchool(school);
         test.setSubject(subject);
-
         test.setSchool(school);
-        test.setNo(rSet.getInt("NO"));
-        test.setPoint(rSet.getInt("POINT"));
-        test.setClassNum(rSet.getString("CLASS_NUM"));
+        test.setNo(no);
+
+        // 得点をセット
+        int point = rSet.getInt("TEST_POINT");
+        if (!rSet.wasNull()) {
+            test.setPoint(Integer.valueOf(point));
+        } else {
+            test.setPoint(null);
+        }
+
+        String testClassNum = rSet.getString("TEST_CLASS_NUM");
+        if (testClassNum == null || testClassNum.isEmpty()) {
+            test.setClassNum(student.getClassNum());
+        } else {
+            test.setClassNum(testClassNum);
+        }
 
         return test;
 
@@ -77,21 +85,45 @@ public class TestDao extends Dao {
 
         List<Test> list = new ArrayList<>();
 
-        String sql = baseSql
-                + "WHERE s.ENT_YEAR = ? AND t.CLASS_NUM = ? AND t.SUBJECT_CD = ? AND t.NO = ? AND t.SCHOOL_CD = ?;";
+        // ベース
+        String sql = "SELECT s.*, t.CLASS_NUM AS TEST_CLASS_NUM, t.NO AS TEST_NO, t.POINT AS TEST_POINT "
+                + "FROM STUDENT s "
+                + "LEFT JOIN TEST t ON s.NO = t.STUDENT_NO AND t.NO = ? AND t.SUBJECT_CD = ? AND t.SCHOOL_CD = ? "
+                + "WHERE s.SCHOOL_CD = ? ";
+
+        ArrayList<Object> otherParams = new ArrayList<>();
+        if (entYear != 0) {
+            sql += "AND s.ENT_YEAR = ? ";
+            otherParams.add(entYear);
+        }
+        if (classNum != null && !classNum.isEmpty()) {
+            sql += "AND s.CLASS_NUM = ? ";
+            otherParams.add(classNum);
+        }
+
+        sql += "ORDER BY s.NO ASC;";
 
         try (Connection connection = getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, entYear);
-            statement.setString(2, classNum);
-            statement.setString(3, subject.getCd());
-            statement.setInt(4, num);
-            statement.setString(5, school.getCd());
+            statement.setInt(1, num);
+            statement.setString(2, subject.getCd());
+            statement.setString(3, school.getCd());
+            statement.setString(4, school.getCd());
+
+            // 追加パラメーターをセット
+            for (int i = 0; i < otherParams.size(); i++) {
+                Object param = otherParams.get(i);
+                if (param instanceof Integer) {
+                    statement.setInt(5 + i, (Integer) param);
+                } else if (param instanceof String) {
+                    statement.setString(5 + i, (String) param);
+                }
+            }
 
             try (ResultSet rSet = statement.executeQuery()) {
                 while (rSet.next()) {
-                    list.add(postFilter(rSet, school));
+                    list.add(this.postFilter(rSet, subject, school, num));
                 }
             }
 
@@ -132,16 +164,26 @@ public class TestDao extends Dao {
                 PreparedStatement statement = connection.prepareStatement(sql)) {
 
             if (exists == null) {
-                // 存在しない。INSERT
-                statement.setInt(1, test.getPoint());
+                // 存在しない → INSERT
+                // 得点: nullを区別
+                if (test.getPoint() == null) {
+                    statement.setNull(1, java.sql.Types.INTEGER);
+                } else {
+                    statement.setInt(1, test.getPoint());
+                }
                 statement.setString(2, test.getStudent().getNo());
                 statement.setString(3, test.getSubject().getCd());
                 statement.setInt(4, test.getNo());
                 statement.setString(5, school.getCd());
                 statement.setString(6, test.getClassNum());
             } else {
-                // 存在。UPDATE
-                statement.setInt(1, test.getPoint());
+                // 存在 → UPDATE
+                // 得点: nullを区別
+                if (test.getPoint() == null) {
+                    statement.setNull(1, java.sql.Types.INTEGER);
+                } else {
+                    statement.setInt(1, test.getPoint());
+                }
                 statement.setString(2, test.getStudent().getNo());
                 statement.setString(3, test.getSubject().getCd());
                 statement.setInt(4, test.getNo());
